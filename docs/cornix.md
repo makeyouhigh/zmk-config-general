@@ -172,14 +172,11 @@ Use your preferred method to build
    projects:
      - name: zmk
        remote: zmkfirmware
-       revision: main
        import: app/west.yml
      - name: zmk-keyboard-cornix
        remote: cornix-shield
-       revision: main
      - name: zmk-helpers
        remote: urob
-       revision: main
    ```
 
 2. Update Dependencies
@@ -295,12 +292,9 @@ remotes:
 projects:
   - name: zmk
     remote: zmkfirmware
-    revision: main
     import: app/west.yml
   - name: zmk-keyboard-cornix
     remote: cornix-shield
-    revision: main
   - name: zmk-helpers
     remote: urob
-    revision: main
 ```
