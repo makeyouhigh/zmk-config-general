@@ -3,62 +3,71 @@ name: Release ZMK Firmware
 on:
   push:
     tags:
-      - "v*.*" # Only trigger when you push a version tag like v1.2.3
+      - "v*"
   workflow_dispatch:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  update:
-    uses: urob/zmk-actions/.github/workflows/upgrade-module.yml@main
   build:
     uses: ./.github/workflows/build.yml
+
   release:
     needs: build
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download built firmware
+      - name: Download built firmware artifacts
         uses: actions/download-artifact@v4
         with:
-          name: firmware # This must match the artifact name in build-user-config.yml
           path: ./artifacts
-      - name: Display structure of downloaded files
+          merge-multiple: true
+
+      - name: Display downloaded file structure
         run: ls -R ./artifacts
-      - name: Package UF2 into a zip
+
+      - name: Package UF2 files into a zip
+        id: package
         run: |
-          cd ./artifacts
-          zip zmk-firmware-${{ github.ref_name }}.zip *.uf2
+          set -euo pipefail
+          mapfile -t uf2_files < <(find ./artifacts -type f -name "*.uf2" | sort)
+
+          if [ "${#uf2_files[@]}" -eq 0 ]; then
+            echo "No UF2 files found in artifacts."
+            exit 1
+          fi
+
+          zip_file="zmk-firmware-${GITHUB_REF_NAME}.zip"
+          zip -j "$zip_file" "${uf2_files[@]}"
+          echo "zip_file=$zip_file" >> "$GITHUB_OUTPUT"
+
       - name: Determine release type
         id: reltype
         run: |
           TAG="${GITHUB_REF_NAME}"
           if [[ "$TAG" =~ [a-zA-Z] ]]; then
-            echo "prerelease=true" >> $GITHUB_OUTPUT
-            echo "make_latest=false" >> $GITHUB_OUTPUT
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "make_latest=false" >> "$GITHUB_OUTPUT"
           else
-            echo "prerelease=false" >> $GITHUB_OUTPUT
-            echo "make_latest=true" >> $GITHUB_OUTPUT
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "make_latest=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Release
+      - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
-        if: github.ref_type == 'tag'
         with:
-          files: ./artifacts/firmware-${{ github.ref_name }}.zip
+          files: ${{ steps.package.outputs.zip_file }}
           name: "Release ${{ github.ref_name }}"
           make_latest: ${{ steps.reltype.outputs.make_latest }}
           prerelease: ${{ steps.reltype.outputs.prerelease }}
+          generate_release_notes: true
           body: |
-            Automated ZMK firmware release for version ${{ github.ref_name }}.
-            Download `zmk-firmware-${{ github.ref_name }}.zip` below.
+            Automated ZMK firmware release for `${{ github.ref_name }}`.
+            Includes all UF2 artifacts generated from `build.yaml`.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

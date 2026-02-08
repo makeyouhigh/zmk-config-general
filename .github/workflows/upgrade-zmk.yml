@@ -3,10 +3,14 @@ name: Check for new ZMK releases
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 22 * * 3" # Run daily at 22:00 UTC
+    - cron: "0 22 * * 3" # Run weekly on Wednesday at 22:00 UTC
 
 permissions:
   contents: write
+
+concurrency:
+  group: upgrade-zmk
+  cancel-in-progress: true
 
 jobs:
   upgrade-zmk:

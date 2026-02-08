@@ -1,4 +1,5 @@
 name: Draw ZMK keymaps
+
 on:
   workflow_dispatch:
   push:
@@ -10,6 +11,13 @@ on:
       - "config/*.json"
       - "config/*.keymap"
       - "config/*.dtsi"
+      - "config/**/*.keymap"
+      - "config/**/*.dtsi"
+      - "config/**/*.h"
+
+concurrency:
+  group: draw-keymaps-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   keymap-drawer:

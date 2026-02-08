@@ -4,18 +4,34 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - ".github/workflows/test-main.yml"
+      - ".github/workflows/test-release.yml"
+      - "build.yaml"
+      - "boards/**"
+      - "config/**"
+      - "config/west.yml"
       - "dts/**"
       - "include/**"
       - "src/**"
       - "tests/**"
   pull_request:
     paths:
+      - ".github/workflows/test-main.yml"
+      - ".github/workflows/test-release.yml"
+      - "build.yaml"
+      - "boards/**"
+      - "config/**"
+      - "config/west.yml"
       - "dts/**"
       - "include/**"
       - "src/**"
       - "tests/**"
   schedule:
     - cron: "0 21 * * 3"
+
+concurrency:
+  group: test-main-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
