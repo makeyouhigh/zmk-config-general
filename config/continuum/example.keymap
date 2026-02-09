@@ -1,0 +1,15 @@
+// When using wireless, define CONFIG_WIRELESS before including base keymap
+#define CONFIG_WIRELESS
+
+// Extra keymap definitions
+#define ZMK_BASE_LAYER(name, LT, RT, LM, RM, LB, RB, LH, RH)                   \
+    ZMK_LAYER(                                                                 \
+        name,                                                                  \
+                    LT  RT                                                     \
+                    LM  RM                                                     \
+        &kp ESC     LB  RB   &kp BSPC                                          \
+        &kp ENTER   LH  RH   &kp SPACE                                         \
+    )
+
+#include "continuum/matrix/totem.h"
+#include "continuum/base.keymap"
