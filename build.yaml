@@ -26,11 +26,9 @@ include:
     artifact-name: totem_left
   - board: seeeduino_xiao_ble
     shield: totem_right
-    snippet: common-config
     artifact-name: totem_right
   - board: seeeduino_xiao_ble
     shield: settings_reset
-    snippet: common-config
     artifact-name: totem_reset
 
   # - board: seeeduino_xiao_ble
