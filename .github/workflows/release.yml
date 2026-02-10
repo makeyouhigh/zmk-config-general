@@ -5,6 +5,11 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag to release for manual runs (example: v1.2.3)"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -15,13 +20,35 @@ concurrency:
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build-all.yml
 
   release:
     needs: build
-    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          INPUT_TAG_NAME: ${{ github.event.inputs.tag_name }}
+        run: |
+          set -euo pipefail
+
+          tag="${INPUT_TAG_NAME:-}"
+          if [ "${REF_TYPE}" = "tag" ]; then
+            tag="${REF_NAME}"
+          fi
+
+          if [ -z "${tag}" ]; then
+            echo "::error::No release tag resolved. For manual dispatch, set 'tag_name'."
+            exit 1
+          fi
+
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "Using release tag: ${tag}"
+
       - name: Download built firmware artifacts
         uses: actions/download-artifact@v4
         with:
@@ -31,25 +58,52 @@ jobs:
       - name: Display downloaded file structure
         run: ls -R ./artifacts
 
-      - name: Package UF2 files into a zip
+      - name: Package firmware files into release assets
         id: package
+        env:
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
         run: |
           set -euo pipefail
-          mapfile -t uf2_files < <(find ./artifacts -type f -name "*.uf2" | sort)
+          mapfile -t firmware_files < <(find ./artifacts -type f \( -name "*.uf2" -o -name "*.bin" -o -name "*.hex" \) | sort)
 
-          if [ "${#uf2_files[@]}" -eq 0 ]; then
-            echo "No UF2 files found in artifacts."
+          if [ "${#firmware_files[@]}" -eq 0 ]; then
+            echo "No firmware files (.uf2/.bin/.hex) found in artifacts."
             exit 1
           fi
 
-          zip_file="zmk-firmware-${GITHUB_REF_NAME}.zip"
-          zip -j "$zip_file" "${uf2_files[@]}"
-          echo "zip_file=$zip_file" >> "$GITHUB_OUTPUT"
+          mkdir -p ./release-assets
+          for file in "${firmware_files[@]}"; do
+            cp "$file" "./release-assets/$(basename "$file")"
+          done
+
+          (
+            cd ./release-assets
+            : > SHA256SUMS
+            for file in *.uf2 *.bin *.hex; do
+              [ -f "$file" ] || continue
+              sha256sum "$file" >> SHA256SUMS
+            done
+            sort -o SHA256SUMS SHA256SUMS
+          )
+
+          zip_file="zmk-firmware-${RELEASE_TAG}.zip"
+          (
+            cd ./release-assets
+            assets=(./SHA256SUMS)
+            for file in ./*.uf2 ./*.bin ./*.hex; do
+              [ -f "$file" ] || continue
+              assets+=("$file")
+            done
+            zip -9 "../${zip_file}" "${assets[@]}"
+          )
+
+          echo "zip_file=${zip_file}" >> "$GITHUB_OUTPUT"
+          echo "sha_file=release-assets/SHA256SUMS" >> "$GITHUB_OUTPUT"
 
       - name: Determine release type
         id: reltype
         run: |
-          TAG="${GITHUB_REF_NAME}"
+          TAG="${{ steps.tag.outputs.tag }}"
           if [[ "$TAG" =~ [a-zA-Z] ]]; then
             echo "prerelease=true" >> "$GITHUB_OUTPUT"
             echo "make_latest=false" >> "$GITHUB_OUTPUT"
@@ -61,13 +115,18 @@ jobs:
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.package.outputs.zip_file }}
-          name: "Release ${{ github.ref_name }}"
+          tag_name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          files: |
+            ${{ steps.package.outputs.zip_file }}
+            ${{ steps.package.outputs.sha_file }}
+          name: "Firmware ${{ steps.tag.outputs.tag }}"
           make_latest: ${{ steps.reltype.outputs.make_latest }}
           prerelease: ${{ steps.reltype.outputs.prerelease }}
           generate_release_notes: true
           body: |
-            Automated ZMK firmware release for `${{ github.ref_name }}`.
-            Includes all UF2 artifacts generated from `build.yaml`.
+            Automated ZMK firmware release for `${{ steps.tag.outputs.tag }}`.
+            Firmware binaries are attached as release assets (`zmk-firmware-*.zip` and `SHA256SUMS`).
+            GitHub auto-generates source code archives for every release; those links cannot be disabled.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,22 @@
+services:
+  zmk-build-release:
+    image: zmkfirmware/zmk-build-arm:stable
+    working_dir: /workspace
+    entrypoint: ["python3", "scripts/local.py"]
+    volumes:
+      - .:/workspace
+      - ./.build/local/workspace:/tmp/zmk-config
+
+  zmk-build-main:
+    image: zmkfirmware/zmk-build-arm:3.5
+    working_dir: /workspace
+    entrypoint:
+      - python3
+      - scripts/local.py
+      - --zmk-revision
+      - main
+      - --base-dir
+      - /tmp/zmk-config-main
+    volumes:
+      - .:/workspace
+      - ./.build/local/workspace-main:/tmp/zmk-config-main

@@ -1,57 +1,87 @@
 # Development
 
-This document describes the development workflow used by this repository.
+This document describes day-to-day development and local build flow for this repository.
 
-## Current CI Scope
+## CI Workflows
 
-The active firmware matrix is defined in `build.yaml`.
+Build and release are matrix-driven via `build.yaml`.
 
-- `seeeduino_xiao_ble + totem_left` -> `totem_left.uf2`
-- `seeeduino_xiao_ble + totem_right` -> `totem_right.uf2`
-- `seeeduino_xiao_ble + settings_reset` -> `totem_reset.uf2`
-
-Other keyboard docs are reference material; they are not currently included in the CI build matrix.
+- `.github/workflows/build.yml`: reusable matrix build + artifact merge
+- `.github/workflows/build-all.yml`: build all targets from `build.yaml`
+- `.github/workflows/build-inputs.yml`: build selected targets by `artifact-name`
+- `.github/workflows/release.yml`: build all + publish firmware release assets
 
 ## Recommended Workflow (GitHub Actions)
 
-1. Edit `config/*.keymap` and/or `config/*.conf`.
+1. Edit `config/*.keymap`, `config/*.conf`, `build.yaml`, or shield files.
 2. Commit and push your branch.
-3. Wait for the `Build ZMK firmware` workflow to pass.
-4. Download artifacts from Actions:
-5. Flash the matching `.uf2` files to each half.
+3. Wait for CI (`Build All Firmware` or test workflows).
+4. Download build artifacts from Actions or release assets from Releases.
+5. Flash matching firmware files to target devices.
 
-This is the easiest way to stay aligned with this repository's pinned dependencies in `config/west.yml`.
+This keeps builds aligned with pinned dependencies in `config/west.yml`.
 
-## Local Build (Docker, PowerShell)
+## Local Build (Docker, CI-like)
+
+Two local services are provided in `docker-compose.yml`:
+
+- `zmk-build-release`: uses `zmkfirmware/zmk-build-arm:stable` and your pinned `config/west.yml` revision.
+- `zmk-build-main`: overrides only the `zmk` project revision to `main` via `--zmk-revision main`.
+
+Note: Docker image tags (`stable`, `3.5`, etc.) define the build environment/toolchain, not the ZMK firmware revision itself.
 
 ### Prerequisites
 
-- Docker Desktop
-- Git
-- This repository cloned locally
+- Docker (Docker Desktop or Docker Engine)
+- Repository cloned locally
 
-### Build all artifacts locally
+### Short, cross-platform command (recommended)
 
-Run from repository root:
+From repository root:
 
-```powershell
-New-Item -ItemType Directory -Force firmware | Out-Null
+```bash
+# List valid artifact-name values from build.yaml
+docker compose run --rm zmk-build-release --list
 
-# Left
-docker run --rm -it -v "${PWD}:/config" -v "${PWD}/firmware:/firmware" zmkfirmware/zmk-build-arm:stable bash -lc "set -e; mkdir -p /work && cd /work; git clone --depth 1 --branch v0.3 https://github.com/zmkfirmware/zmk.git; cd zmk; west init -l app; west update; west zephyr-export; west build -p -s app -b seeeduino_xiao_ble -- -DSHIELD=totem_left -DSNIPPET='common-config;studio-rpc-usb-uart' -DZMK_CONFIG=/config; cp build/zephyr/zmk.uf2 /firmware/totem_left.uf2"
+# Build selected targets
+docker compose run --rm zmk-build-release --artifact-names totem_left,totem_right,totem_reset
 
-# Right
-docker run --rm -it -v "${PWD}:/config" -v "${PWD}/firmware:/firmware" zmkfirmware/zmk-build-arm:stable bash -lc "set -e; mkdir -p /work && cd /work; git clone --depth 1 --branch v0.3 https://github.com/zmkfirmware/zmk.git; cd zmk; west init -l app; west update; west zephyr-export; west build -p -s app -b seeeduino_xiao_ble -- -DSHIELD=totem_right -DSNIPPET='common-config' -DZMK_CONFIG=/config; cp build/zephyr/zmk.uf2 /firmware/totem_right.uf2"
+# Build with wildcard patterns (shell-style)
+docker compose run --rm zmk-build-release --artifact-names "totem_*"
+docker compose run --rm zmk-build-release --artifact-names "*_left,*_right"
 
-# Reset firmware
-docker run --rm -it -v "${PWD}:/config" -v "${PWD}/firmware:/firmware" zmkfirmware/zmk-build-arm:stable bash -lc "set -e; mkdir -p /work && cd /work; git clone --depth 1 --branch v0.3 https://github.com/zmkfirmware/zmk.git; cd zmk; west init -l app; west update; west zephyr-export; west build -p -s app -b seeeduino_xiao_ble -- -DSHIELD=settings_reset -DZMK_CONFIG=/config; cp build/zephyr/zmk.uf2 /firmware/totem_reset.uf2"
+# Build every target in build.yaml
+docker compose run --rm zmk-build-release
+
+# Build against ZMK main (local override of zmk project revision)
+docker compose run --rm zmk-build-main --artifact-names totem_left
 ```
 
-Expected outputs:
+Notes:
 
-- `firmware/totem_left.uf2`
-- `firmware/totem_right.uf2`
-- `firmware/totem_reset.uf2`
+- This uses `docker-compose.yml` and `scripts/local.py`.
+- Output artifacts are written to `firmware/`.
+- Build directories are kept under `.build/local/build/`.
+- West workspace/cache state is kept under `.build/local/workspace/` (release) and `.build/local/workspace-main/` (main).
+- `--artifact-names` accepts exact names and wildcard patterns. If a pattern matches nothing, the script exits with an error.
+
+### Direct docker run (without compose)
+
+If you prefer not to use Docker Compose:
+
+```bash
+docker run --rm -it -v "${PWD}:/workspace" -w /workspace zmkfirmware/zmk-build-arm:stable python3 scripts/local.py --artifact-names "totem_left,totem_right"
+```
+
+### Why not plain CMake?
+
+Use `west build` instead of raw `cmake` for ZMK firmware. `west` handles:
+
+- Zephyr/ZMK workspace initialization
+- module resolution from `config/west.yml`
+- snippet wiring and board/shield build conventions
+
+The local runner follows the same model as the GitHub workflow and keeps command length short.
 
 ## Flashing
 
@@ -62,14 +92,10 @@ For each target device:
 3. Copy the matching `.uf2` file to the mounted drive.
 4. Wait for automatic reboot.
 
-Typical order for a clean state:
-
-1. Flash `totem_reset.uf2` (optional, for bond/settings reset).
-2. Flash `totem_left.uf2` to left half.
-3. Flash `totem_right.uf2` to right half.
-
 ## Quick Troubleshooting
 
-- Build fails with unknown shield: verify `-DSHIELD` matches one of `totem_left`, `totem_right`, `settings_reset`.
-- Missing modules during local build: ensure `west update` ran successfully.
-- Split reconnect problems after flashing: flash reset firmware and re-pair from scratch.
+- Unknown `artifact-name`: run `--list` and use an exact name or valid wildcard from `build.yaml`.
+- Missing module/build errors: rerun without `--skip-update` so `west update` runs.
+- `recursive 'source' of 'Kconfig.zephyr' detected`: this usually means a local Zephyr checkout exists under repo `zephyr/`. The local runner now stages only git-visible module files, but cleanup of stale local checkouts still helps (`zephyr/`, `modules/`, `.west/`).
+- No `.uf2` output for a target: check for fallback binary output (`.bin`), board type, and build logs.
+- Split reconnect problems after flashing: flash reset firmware and re-pair.

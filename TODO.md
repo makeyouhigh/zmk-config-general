@@ -16,19 +16,19 @@ Rule of done for each firmware target:
 
 - [ ] Freeze naming convention (`<keyboard>_<hardware>_<role>`)
 - [ ] Freeze hardware IDs (`zdd`, `prospector`)
-- [x] Freeze role names (`dongle`, `central`, `scanner`)
+- [ ] Freeze role names (`dongle`, `central`, `scanner`)
 
 ### ZMK Dongle Display(`zdd`)
 
 - [ ] implement device single
-  - [x] totem
-  - [x] urchin
-  - [x] sofle
-  - [x] eyelash sofle
-  - [x] cornix
-  - [x] delta omega
-  - [x] corne
-  - [x] eyelash corne variation
+  - [ ] totem
+  - [ ] urchin
+  - [ ] sofle
+  - [ ] eyelash sofle
+  - [ ] cornix
+  - [ ] delta omega
+  - [ ] corne
+  - [ ] eyelash corne variation
 - [ ] develop central
   - [ ] totem
   - [ ] urchin
@@ -73,18 +73,12 @@ Rule of done for each firmware target:
   - [ ] delta omega
   - [ ] corne
 
-### 1.5 Shared dongle checks
-
-- [x] Confirm scanner source keyboards use `scanner-advertisement`
-- [x] Confirm bond reset workflow (`settings_reset` and `BT_CLR`) per role
-- [x] Confirm role switch workflow (reflash dongle, reflash keyboard when needed)
-
 ## 2. Keyboard / Devices
 
 - [x] Totem: verify left/right/reset targets
-- [x] Urchin: verify left/right/reset targets
-- [x] Sofle: verify left/right/reset targets
-- [x] Corne: verify target status and doc status
+- [ ] Urchin: verify left/right/reset targets
+- [ ] Sofle: verify left/right/reset targets
+- [ ] Corne: verify target status and doc status
 - [ ] Cornix: verify target status and doc status
 - [ ] Delta Omega: verify target status and doc status
 
@@ -98,24 +92,29 @@ Rule of done for each firmware target:
 - [x] Keep `README.md` and `README_KO.md` synchronized after each feature batch
 - [x] Keep dongle role wording consistent (`dongle`, `central`, `scanner`)
 - [x] Update `docs/dongle.md` matrix and examples after each new target
-- [x] Run docs sanity pass against `docs/docs_rules.md`
+- [ ] Run docs sanity pass against `docs/docs_rules.md`
 - [x] Keep `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and docs rules aligned
-- [x] Ensure each keyboard doc has current build/flash/troubleshooting sections
+- [ ] Ensure each keyboard doc has current build/flash/troubleshooting sections
 
 ## 4. CICD
 
-- [ ] Keep all existing matrix targets green
-- [ ] Confirm `urchin_left_w_dongle` display regression stays fixed
-- [ ] Add new targets incrementally (do not batch too many at once)
 - [x] Ensure each target has unique `artifact-name`
-- [ ] Keep `cmake-args` overrides minimal and documented in `build.yaml`
-- [ ] Verify module pins in `config/west.yml` before releases
-- [ ] Add release checklist step: artifact count and names match matrix
+- [x] Add selective build process
+- [x] Add local developement support with docker + cmake command
+- [x] Release workflow: attach firmware assets (`.uf2/.bin/.hex`) with checksums
+- [x] Release docs: clarify GitHub source archives are always auto-generated
 
 ## 5. Nice to Have
 
 - [ ] Add standalone compatibility matrix doc (`keyboard x hardware x role`)
-- [ ] Add dongle troubleshooting decision tree
-- [ ] Add reusable manual runtime test checklist template
 - [ ] Add changelog template focused on firmware behavior changes
 - [ ] Add simple architecture diagrams for each dongle role
+- [x] Deep sleep rollout (`CONFIG_ZMK_SLEEP`, `CONFIG_ZMK_IDLE_SLEEP_TIMEOUT`) and per-keyboard wakeup-source validation
+- [x] Soft-off UX (`CONFIG_ZMK_PM_SOFT_OFF`, `&soft_off`) with hold-time and wake strategy per board
+- [ ] External power gating for display/lighting builds (`CONFIG_ZMK_EXT_POWER`, `zmk,ext-power-generic`)
+- [x] Split battery reporting pilot (`CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY` + `...FETCHING`)
+- [x] BLE stability/security pilot (`CONFIG_ZMK_BLE_EXPERIMENTAL_CONN`, passkey entry) with re-pair test plan
+- [ ] Studio locking policy tuning (`CONFIG_ZMK_STUDIO_LOCKING`, idle lock timeout) and recovery SOP
+- [ ] Display power/perf tuning baseline (`CONFIG_ZMK_DISPLAY_BLANK_ON_IDLE`, tick period) per display target
+- [x] Bluetooth profile ops hardening (`BT_SEL/BT_DISC/BT_CLR_ALL`) and user-facing keymap conventions
+- [x] Pointing device pilot for select boards (`CONFIG_ZMK_POINTING`) with host re-pair validation

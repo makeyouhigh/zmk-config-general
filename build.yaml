@@ -30,15 +30,3 @@ include:
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: totem_reset
-
-  # - board: seeeduino_xiao_ble
-  #   shield: totem_left_with_dongle
-  #   artifact-name: totem_left_with_dongle
-
-  # ZMK Dongle Display
-  # - board: nice_nano_v2
-  #   shield: zmk_dongle_display
-  #   artifact-name: zmk_dongle_display
-  # - board: nice_nano_v2
-  #   shield: setting_reset
-  #   artifact-name: zmk_dongle_display_setting_reset

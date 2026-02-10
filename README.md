@@ -82,7 +82,9 @@ Canonical repository layout and responsibility boundaries.
 zmk-config/
 ├── .github/
 │   └── workflows/
-│       ├── build.yml                 # CI firmware builds
+│       ├── build.yml                 # Reusable build matrix + merge workflow
+│       ├── build-all.yml             # Build all firmware targets
+│       ├── build-inputs.yml          # Build selected firmware targets
 │       └── release.yml               # Tagged release artifact generation
 │
 ├── boards/
@@ -229,6 +231,8 @@ The layout is based on Miryoku and implements Timeless HRM to minimize typos and
 - Clone and customize
 - Commit and push to trigger CI build
 - Download firmware artifacts from the GitHub Actions tab
+- For tagged releases, download release assets (`zmk-firmware-<tag>.zip`, `SHA256SUMS`) for flashing
+- GitHub also auto-generates source archives for releases; those are repository snapshots, not flashable firmware
 - Flash new firmware to target devices
 
 ### Firmware build targets
