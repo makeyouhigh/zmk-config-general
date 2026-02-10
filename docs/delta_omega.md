@@ -1,59 +1,73 @@
-# DELTA OMEGA
+# Delta Omega
 
-![DELTA OMEGA](/docs/images/delta_omega_header.png)
+![Delta Omega](/docs/images/delta_omega_header.png)
 
-A portable ultra-low-profile (ULP) wireless 3×5+2 split keyboard designed by [unspecworks](https://github.com/unspecworks). It focuses on extreme portability, rigid construction, and minimal key count while preserving ergonomics through splay and stagger.
+This document covers Delta Omega support as integrated in this repository.
 
-> [!Note]
-> Delta Omega hardware design, case, and branding are owned by [unspecworks](https://github.com/unspecworks).
-> This repository only provides ZMK configuration and documentation.
+## Reference Material
 
-## Overview
+- Delta Omega hardware: <https://github.com/unspecworks/delta-omega>
+- Delta Omega ZMK module: <https://github.com/unspecworks/zmk-keyboard-delta-omega>
+- ZMK docs: <https://zmk.dev/docs>
 
-- Switch support: Cherry MX ULP or Kailh PG1316s
-- 34 keys, splayed and staggered with choc spacing
-- Wireless
-- CNC aluminum case
+## Hardware Overview
 
-Delta Omega targets users who want a travel ready split keyboard with minimal thickness and a solid, premium enclosure. The layout prioritizes thumb efficiency and compact reach over key count.
+- 34-key (3x5+2) split keyboard
+- Ultra-low-profile design
+- Module provides upstream shield definitions; this repo focuses on user config and build matrix wiring
 
-## Parameters
-
-### Hardware
-
-![Dimension](/docs/images/delta_omega_dimension.png)
-![Splay Layout](/docs/images/delta_omega_splay_layout.png)
+## Layout
 
 ### Physical Layout
 
-![Layout](/docs/images/delta_omega_layout.svg)
+![Delta Omega dimension](/docs/images/delta_omega_dimension.png)
+![Delta Omega splay](/docs/images/delta_omega_splay_layout.png)
+![Delta Omega layout](/docs/images/delta_omega_layout.svg)
 
 ### Keymap
 
-![Keymap](/docs/images/delta_omega_keymap.svg)
+![Delta Omega keymap](/docs/images/delta_omega_keymap.svg)
 
-## ZMK Support
+## Firmware Structure
 
-Delta Omega provides official ZMK support via a dedicated keyboard module maintained by the designer.
+Relevant paths in this repo:
 
-- [ZMK keyboard module](https://github.com/unspecworks/zmk-keyboard-delta-omega)
-- [Pre configured ZMK repository](https://github.com/unspecworks/zmk-delta-omega)
+- `config/delta_omega.keymap`
+- `config/delta_omega.conf`
+- `config/delta_omega_dongle.keymap`
+- `boards/shields/delta_omega_variants/`
+- `build.yaml`
+- `config/west.yml`
 
-This repository consumes Delta Omega support rather than re implementing the shield locally.
+Module-provided hardware path after `west update`:
 
-## Firmware Integration in This Repo
+- `modules/keyboards/delta-omega/boards/shields/delta_omega/`
 
-- Delta Omega shield is sourced from the upstream module
-- No custom matrix or pin definitions are duplicated here
-- User behavior and layout live under config/delta_omega.\*
-- Build wiring is handled via west.yml and build.yaml
+## How to Use
 
-This keeps hardware definitions upstream and avoids drift.
+### Build
 
-## Documentation and References
+1. Ensure dependencies are updated: `west update`.
+2. Edit user behavior in `config/delta_omega.keymap` and `config/delta_omega.conf`.
+3. Build or run CI using matrix entries in `build.yaml`.
 
-- [DELTA OMEGA](https://github.com/unspecworks/delta-omega)
-  - [Delta ULP Keycap](https://github.com/unspecworks/delta-ulp-keycap)
-- [Video](https://youtu.be/UktrqN3MlLI)
-- [ZMK Keyboard Module](https://github.com/unspecworks/zmk-keyboard-delta-omega)
-  - [Pre-conf ZMK Config](https://github.com/unspecworks/zmk-delta-omega)
+Current active targets:
+
+- `delta_omega_left`
+- `delta_omega_right`
+- `delta_omega_reset`
+- `delta_omega_dongle`
+- `delta_omega_left_w_dongle`
+
+### Flashing
+
+1. Put left or right target into bootloader mode.
+2. Flash matching UF2 artifact for that target.
+3. For split operation, flash both halves with matching firmware batch.
+4. If BLE state is stale after topology changes, flash reset and re-pair.
+
+## Status
+
+- Delta Omega support is active via upstream module integration.
+- Dedicated dongle-side overlay/config exists in `boards/shields/delta_omega_variants/`.
+- Build matrix entries are present in `build.yaml`.

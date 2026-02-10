@@ -1,115 +1,173 @@
 # Dongle
 
-## Multiple Keyboards With a Single Dongle
+This document is the repository-specific technical guide for dongle operation.
 
-This repository is designed around a **single dongle with multiple registered keyboards**.
-Only one keyboard set is active at any time. Keyboards are swapped by power state, not by software switching.
+## Scope
 
-## Concept
+- This guide describes dongle roles used in this repo.
+- Dongle role is fixed by firmware build and cannot be switched at runtime.
+- Changing role requires reflashing dongle firmware, and may also require reflashing keyboard firmware.
 
-- One dongle acts as the **BLE central**.
-- Multiple split keyboards are **pre-paired** to the dongle.
-- Each keyboard consists of two peripherals, left and right.
-- Only one keyboard set is powered and connected at a time.
+## Dongle Roles
 
-This is a **swap model**, not a multi-input model.
+This repository defines three dongle roles:
 
-### Design Trade-offs
+- `central`
+  - One dongle acts as BLE central for multiple split keyboards that are pre-bonded.
+  - Only one keyboard set should be active at a time.
+- `dongle`
+  - One dongle is dedicated to a single keyboard.
+  - Intended for single-keyboard daily use with a fixed pairing set.
+- `scanner`
+  - Dongle passively scans keyboard status advertisements and renders status UI.
+  - It is an observer role, not a BLE input transport path.
 
-I think the advantage of dongles is very much overrated.
+## Dongle Hardware Variants
 
-This document treats dongle mode as a workaround, not an upgrade.
+This repo uses two dongle hardware families:
 
-Most commonly cited benefits only exist when comparing dongle-based BLE against host-direct BLE. When compared against a wired keyboard, or a wired master split, those advantages disappear.
+- ZMK Dongle Display (`zdd`) hardware
+- Prospector hardware
 
-Latency is not improved relative to wired. A dongle adds a private BLE hop followed by USB. This can be more stable than host BLE, but it is never better than a wired connection. Any perceived latency improvement comes from avoiding unreliable desktop BLE stacks, not from superior transport.
+Firmware direction in this repo:
 
-Reliability is not increased in absolute terms. The failure mode is inverted. Without the dongle, the keyboard cannot connect at all. This trades intermittent BLE issues for a hard external dependency.
+- `zdd` hardware uses ZMK Dongle Display firmware family
+- `prospector` hardware uses YADS firmware family (robust alternative track)
 
-Power savings are irrelevant when the master half is connected over USB. A plugged master already avoids host BLE power costs without additional hardware.
+Both hardware variants can run any of the roles above, as long as the matching role firmware is flashed.
 
-Multi-host switching is not unique to dongles. ZMK already supports multiple BLE profiles. The dongle simplifies host switching at the cost of locking operation to a specific device.
+## Role Switching Rules
 
-Security benefits only apply when comparing against public BLE HID. Compared to wired USB HID, a dongle increases the attack surface rather than reducing it.
+1. Build or download firmware for the target role.
+2. Flash the dongle with that role firmware.
+3. If required by topology change, flash matching keyboard firmware.
+4. Clear stale BLE bonds before pairing again.
 
-Split architecture is simpler from a firmware perspective, but physically worse for users due to reduced mobility and the requirement to carry and not lose an extra device.
+Role switching is a reflash workflow, not a runtime toggle.
 
-The only clear and unconditional benefit of a dongle is offloading UI features such as displays and LEDs without relying on host drivers or HID extensions. All other benefits are trade-offs made specifically to avoid unreliable host BLE behavior, not fundamental technical improvements.
+## Concrete Build Examples
 
-## What “multiple keyboards registered” means
+These examples map directly to targets in `build.yaml`.
 
-- The dongle stores BLE bond information for many keyboards.
-- All keyboards are known to the dongle in advance.
-- At runtime, the dongle connects only to the keyboard that is powered on.
+1. `central` role (multi-keyboard central)
+   - `board: nice_nano_v2`
+   - `shield: dongle_central dongle_display`
+   - `snippet: common-config scanner-advertisement`
+   - `artifact-name: dongle_central`
+2. `dongle` role (single-keyboard dedicated)
+   - `board: nice_nano_v2`
+   - `shield: totem_dongle dongle_display` (example keyboard family)
+   - `snippet: common-config scanner-advertisement`
+   - `artifact-name: totem_dongle`
+3. `scanner` role (status observer)
+   - `board: nice_nano_v2`
+   - `shield: dongle_scanner`
+   - `artifact-name: dongle_scanner`
 
-It does **not** mean:
+## Current Build Coverage
 
-- Multiple keyboards sending input simultaneously.
-- Hot switching without power cycling.
-- Acting as a BLE input mixer.
+Current state from `build.yaml`:
 
-## Required Constraints
+- `zdd` + `dongle` role: build targets exist (`totem_dongle`, `urchin_dongle`, `corne_dongle`, `eyelash_corne_dongle`, `sofle_dongle`, `eyelash_sofle_dongle`, `cornix_dongle`, `delta_omega_dongle`)
+- `zdd` + `central` role: shared build target exists (`dongle_central`)
+- `zdd` + `scanner` role: shared build target exists (`dongle_scanner`)
+- `prospector` hardware + YADS firmware track: planned (not yet in matrix)
+
+> [!NOTE]
+> `eyelash_sofle_dongle` currently uses Sofle-style dongle keymap behavior; eyelash-only extra inputs are not fully mapped yet.
+
+## `central` Role: Multi-Keyboard Model
+
+### Concept
+
+- One dongle is the BLE central.
+- Multiple split keyboard sets are pre-bonded to that dongle.
+- Each split keyboard typically contributes two peripherals (left and right).
+- At runtime, use one keyboard set at a time.
+
+This is a swap model, not a multi-input model.
+
+### Capacity and Constraints
 
 - Never power more than one keyboard set at the same time.
-- Always power off the previous keyboard before powering on another.
-- Each keyboard must be bonded once to the dongle.
+- Power off the current keyboard before powering on the next keyboard.
+- Each keyboard set must be bonded once.
+- Bond storage must fit the total peripheral count.
 
-Violating these constraints leads to:
+If there are `N` split keyboards, plan for up to `2N` bonded peripherals.
 
-- Reconnect latency
-- Pairing churn
-- Phantom or misrouted input
+### Pairing Procedure (Recommended)
 
-## Dongle Requirements
-
-The dongle firmware must be configured as follows:
-
-- ZMK split enabled
-- Dongle acts as split central
-- Peripheral connection count greater than or equal to 2
-- BLE bond storage large enough for all keyboards
-
-If there are N split keyboards, the dongle may need to remember up to **2N bonded peripherals**.
-
-## Initial Pairing Procedure
-
-1. Flash the dongle firmware.
-2. Clear BLE bonds on the dongle and all keyboards.
-3. Power on keyboard A.
-4. Wait until pairing completes.
+1. Flash dongle firmware for `central` role.
+2. Flash keyboard firmware compatible with that role.
+3. Clear BLE bonds on dongle and keyboards before first pairing.
+4. Power on keyboard A and complete bonding.
 5. Power off keyboard A.
-6. Repeat for keyboard B, C, and so on.
+6. Repeat for keyboard B, C, and others.
 
-After this process, all keyboards are registered.
+### Daily Use
 
-## Daily Usage
+1. Power off the currently active keyboard.
+2. Power on the keyboard you want to use.
+3. The dongle reconnects using stored bonds.
 
-1. Power off the currently used keyboard.
-2. Power on the desired keyboard.
-3. The dongle reconnects automatically using stored bonds.
+## `scanner` Role: Status Observer Model
 
-No reflashing or re-pairing is required.
+### Concept
 
-## Design Rationale
+- Scanner listens for status advertisements from compatible keyboard firmware.
+- Scanner does not replace keyboard-to-host input routing.
+- Scanner display is independent from host BLE stack quality.
 
-- ZMK BLE is optimized for a single active input device.
-- Centralizing BLE handling in the dongle reduces dependence on host BLE behavior.
-- Power-based swapping avoids firmware-side complexity.
-- This model scales predictably as more keyboards are added.
+### Requirements
 
-This repository follows this model by design.
+- Keyboard firmware must enable status advertisement.
+  - This repo uses `scanner-advertisement` snippet for that purpose.
+- Channel settings must match your intended topology.
+  - `CONFIG_PROSPECTOR_CHANNEL` on keyboards
+  - `CONFIG_PROSPECTOR_SCANNER_CHANNEL` on scanner
+  - `0` means broadcast/accept-all.
 
-## Variations
+## Bond Reset Methods
 
-### Headless
+Use one of these reset methods when reconnect behavior is unstable or after role changes:
 
-- Nice!Nano v2
-- Seeeduino Xiao BLE
+- Flash `settings_reset` firmware (if target is available in your build matrix).
+- Press a keyboard key mapped to `BT_CLR` (`&bt BT_CLR`) to clear BLE bonds.
 
-### Display
+## Personal Trade-off Notes
 
+I still think the advantage of dongles is often overrated.
+
+In this repo, dongle mode is mostly a role-based workaround, not a universal upgrade.
+
+### `central` role
+
+- Useful when you rotate multiple split keyboards and want one pre-bonded central point.
+- Compared to wired, latency is not better because the path adds an extra BLE hop.
+- Reliability does not increase in absolute terms. Failure mode shifts to dongle dependency.
+- Operational burden is real: strict one-keyboard-at-a-time power policy and larger bond management (`2N` split peripherals for `N` keyboards).
+
+### `dongle` role
+
+- Practical for a single keyboard setup when host BLE behavior is inconsistent.
+- Main gain is predictable reconnect behavior and stable host pathing.
+- Compared to wired master split, benefits are limited and you still carry an extra dependency.
+
+### `scanner` role
+
+- This is still the clearest value case among dongle roles.
+- Dedicated status UI offload is useful and can stay independent from host input transport.
+- It is still additive hardware, so value depends on whether you actually use status surfaces.
+
+### Bottom line
+
+Most dongle benefits are comparative against weak host BLE stacks, not fundamental transport improvements over wired. For this repo, dongle is best treated as a targeted tool per role: `central` for multi-keyboard orchestration, `dongle` for single-keyboard stability, and `scanner` for UI/status observability.
+
+## Related References
+
+- [README Dongle section](../README.md#dongle)
 - [ZMK Dongle Display](https://github.com/englmaxi/zmk-dongle-display)
-- [Prospector](https://github.com/carrefinho/prospector-zmk-module)
-- [Yet Another Dongle Screen(YADS)](https://github.com/janpfischer/zmk-dongle-screen)
-
----
+- [YADS](https://github.com/janpfischer/zmk-dongle-screen)
+- [Prospector Scanner Module](https://github.com/t-ogura/prospector-zmk-module)
+- [zmk-config-prospector](https://github.com/t-ogura/zmk-config-prospector)

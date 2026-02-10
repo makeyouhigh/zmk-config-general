@@ -6,14 +6,14 @@ This document describes the Urchin keyboard: its hardware, design philosophy, la
 
 The Urchin keyboard was originally designed by Duccio (duckyb) as a 34-key wireless-only split keyboard optimized for ZMK and nice!nano controllers. It is a derivative of the Sweep/Swoop family with native support for nice!view displays and hotswappable sockets.
 
-## Reference material
+## Reference Material
 
 - Original Urchin hardware & firmware: <https://github.com/duckyb/urchin>
   - Original makers firmware: <https://github.com/duckyb/urchin-zmk-firmware>
   - Original makers shield: <https://github.com/duckyb/urchin-zmk-module>
 - Variant ZMK configurations and community forks: <https://github.com/theearp/zmk-urchin>
 
-### Hardware Overview
+## Hardware Overview
 
 - 34-key split matrix (3 rows of 10 keys per half plus thumb cluster)
 - Wireless only: no wired USB connection supported natively; Bluetooth via nice!nano controllers required
@@ -79,3 +79,8 @@ Urchin is used by split keyboard enthusiasts who want:
 - Display feedback for connection and battery status
 
 Many users report the split 3×5 layout feels fast once the muscle memory develops.
+
+## Status
+
+- Urchin targets are active in `build.yaml`.
+- Dongle role targets are present as `urchin_dongle` and `urchin_left_w_dongle`.

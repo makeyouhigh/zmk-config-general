@@ -3,7 +3,18 @@
 - [한국어](/README_KO.md)
 - [English](/README.md)
 
-ZMK configuration repository for Jon’s WFH and remote environments.
+This is the main document for this repository.
+
+This project is a multi-keyboard ZMK workspace for Jon's personal WFH and remote environments, with shared layout logic powered by the Continuum framework.
+
+## Project Purpose
+
+Core goals:
+
+- Keep one coherent key behavior model across multiple keyboards
+- Separate hardware definitions from user layout logic
+- Build firmware through reproducible CI targets
+- Document each keyboard and workflow in a single repository
 
 ## Scope and Status
 
@@ -13,10 +24,11 @@ Implemented:
 - Shield-based hardware separation
 - User-level keymaps and feature overrides
 - CI-driven firmware builds via GitHub Actions
+- Shared Continuum framework for reusable key behaviors and layers
 
 Planned or external:
 
-- Dongle firmware with display support
+- Prospector (YADS) role coverage expansion
 - Advanced power profiling per device class
 - Visual layout rendering pipelines
 
@@ -71,7 +83,7 @@ zmk-config/
 ├── .github/
 │   └── workflows/
 │       ├── build.yml                 # CI firmware builds
-│       └── release_with_tag.yml      # Tagged release artifact generation
+│       └── release.yml               # Tagged release artifact generation
 │
 ├── boards/
 │   └── shields/
@@ -109,13 +121,27 @@ Separation rules.
 - Documentation and frozen artifacts live under `docs`.
 - CI and release logic live under `.github/workflows`.
 
+## Continuum Framework
+
+Continuum is the shared keymap framework under `config/continuum/`.
+
+- It is designed to adapt one personal layout model to different keyboard matrices.
+- It is inspired by Miryoku layout concepts and Urob's Timeless HRM approach.
+- It minimizes per-keyboard keymap duplication by reusing shared layers, combos, leader sequences, and behavior definitions.
+
+Reference:
+
+- [Continuum Framework Documentation](docs/continuum.md)
+
 ## Keyboards
 
 - [Delta Omega](docs/delta_omega.md): Portable ultra-low-profile wireless 3×5+2 split keyboard.
 - [Urchin](docs/urchin.md): 34-key low-profile Bluetooth split keyboard.
 - [Totem](docs/totem.md): 38-key low-profile split keyboard using KLP Lame keycaps.
+- [Corne](docs/corne.md): 36(3x5+3), 42(3x6+3) keys most favored split keyboard.
 - [Cornix](docs/cornix.md): Corne-style prebuilt 48-key low-profile split keyboard.
-- [Sofle](docs/sofle.md): 68-key low-profile split keyboard with OLED, roller, and joystick.
+- [Sofle](docs/sofle.md): 68-key low-profile split keyboard with OLED screen and roller.
+  - Eyelash Sofle: Eyelash modified Sofle with joystick.
 
 > [!NOTE]
 > Each keyboard document includes build targets, firmware naming, flashing steps, and known issues.
@@ -125,18 +151,40 @@ Separation rules.
 > [!WARNING]
 > Experimental. Treat as unstable until pairing and reconnect behavior is proven under daily use.
 
+### Roles
+
+- `central`: one dongle as BLE central for multiple pre-bonded split keyboards
+- `dongle`: one dongle dedicated to a single keyboard
+- `scanner`: status observer role that listens to keyboard advertisements
+
+Role switching is firmware-based and requires reflashing the dongle, and sometimes matching keyboard firmware.
+Scanner mode also requires keyboard firmware with status advertisement enabled (this repo uses `scanner-advertisement` snippet).
+
+### Supported hardware variants
+
+- ZMK Dongle Display (`zdd`) hardware
+- Prospector hardware (used with YADS firmware track in this repo)
+
+Both hardware variants can run the roles above with role-matching firmware.
+
 ### Supported variants by firmware family
 
 - [ZMK Dongle Display](https://github.com/englmaxi/zmk-dongle-display): dongle firmware with 1.3-inch OLED screen support
-- [Prospector](https://github.com/carrefinho/prospector-zmk-module): dongle firmware with 1.69-inch IPS LCD screen support
-- [YADS(Yet Another Dongle Screen)](https://github.com/janpfischer/zmk-dongle-screen): Prospector-derived firmware inspired by ZMK Dongle Display
+- [YADS(Yet Another Dongle Screen)](https://github.com/janpfischer/zmk-dongle-screen): robust firmware track for Prospector hardware in this repo
+- [Prospector Scanner Module](https://github.com/t-ogura/prospector-zmk-module): scanner/advertisement module used by scanner-mode integration
 
 > [!NOTE]
-> See [Dongle](docs/DONGLE.md) for details
+> See [Dongle](docs/dongle.md) for full technical guide.
+> Personal view is documented in [Personal Trade-off Notes](docs/dongle.md#personal-trade-off-notes).
 
 ## Layout and Keymap
 
-This configuration centers on [Home Row Mods (HRM)](https://precondition.github.io/home-row-mods), utilizing a Miryoku-based layout and Timeless HRM behavior.
+The layout system in this repository is centered on Continuum, which applies a Miryoku-inspired structure and Timeless-style HRM tuning across keyboards.
+
+Most keyboard keymaps include:
+
+- one matrix mapping header under `config/continuum/matrix/*.h`
+- the shared `config/continuum/base.keymap`
 
 ### References
 
@@ -302,7 +350,7 @@ See individual device documents under [Keyboards](#keyboards) and [Dongle](#dong
 - [Delta Omega](https://github.com/unspecworks/delta-omega)
 - [Urchin](https://github.com/duckyb/urchin)
 - [Totem](https://github.com/GEIGEIGEIST/TOTEM)
-- [Cornix](https://github.com/foostan/crkbd)
+- [Cornix](https://cornixhub.com/)
 - [Sofle](https://github.com/josefadamcik/SofleKeyboard)
 
 ## License

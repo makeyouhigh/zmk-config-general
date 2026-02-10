@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/docs/images/totem_logo_dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="/docs/images/totem_logo_bright.svg">
+  <source media="(prefers-color-scheme: light)" srcset="/docs/images/totem_logo_light.svg">
   <img alt="TOTEM logo font" src="/docs/images/totem_logo_light.svg">
 </picture>
 
@@ -16,6 +16,12 @@ TOTEM is a 38-key column-staggered split keyboard. In this repository it is trea
   Hardware files and physical build instructions.
 - QMK Config: [https://github.com/GEIGEIGEIST/qmk-config-totem](https://github.com/GEIGEIGEIST/qmk-config-totem)
   Reference implementation for QMK only. Not directly applicable to ZMK behavior.
+
+## Hardware Overview
+
+- 38-key column-staggered split keyboard
+- Typical controller: XIAO BLE
+- BLE-first usage model for split operation
 
 ## Layout
 
@@ -59,7 +65,7 @@ The shield-level keymap under `boards/shields/totem/` is treated as a factory fa
 - Runtime BLE role or topology switching.
 - Mixed transport modes.
 
-## Procedures
+## How to Use
 
 ### Build
 

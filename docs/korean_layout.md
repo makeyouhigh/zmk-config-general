@@ -154,6 +154,5 @@ ZMK에서는 이를 일반 키 또는 조합 키로 매핑할 수 있으나, 전
 
 ### 참조 파일
 
-[날개셋 한글 입력기](/docs/files/Ngs1080Setup_x64.msi)
-[신세벌식 p2](/docs/files/신세벌식%20P2.ist)p_x64.msi)
-[신세벌식 p2](/docs/files/신세벌식%20P2.ist)
+- [날개셋 한글 입력기 설치 파일](/docs/files/Ngs1080Setup_x64.msi)
+- [신세벌식 P2 배열 파일](/docs/files/신세벌식%20P2.ist)
