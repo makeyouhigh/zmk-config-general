@@ -1,16 +1,14 @@
-if SHIELD_TOTEM_LEFT
+if SHIELD_URCHIN_LEFT
 
 config ZMK_KEYBOARD_NAME
-    default "TOTEM"
+    default "Urchin"
 
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
 endif
 
-if SHIELD_TOTEM_LEFT || SHIELD_TOTEM_RIGHT
-
+if SHIELD_URCHIN_LEFT || SHIELD_URCHIN_RIGHT
 config ZMK_SPLIT
     default y
-
 endif
