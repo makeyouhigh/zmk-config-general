@@ -10,11 +10,11 @@
 
 /* ZMK_BEHAVIOR */
 
-#define ZMK_BEHAVIOR(name, type, ...) \
+#define ZMK_BEHAVIOR(_name, type, ...) \
     / { \
         behaviors { \
-            name: name { \
-                label = ZMK_HELPER_STRINGIFY(ZB_ ## name); \
+            _name: _name { \
+                display-name = ZMK_HELPER_STRINGIFY(ZB_ ## _name); \
                 ZMK_BEHAVIOR_CORE_ ## type; \
                 __VA_ARGS__ \
             }; \

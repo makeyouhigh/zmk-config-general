@@ -2,7 +2,7 @@
 #include <behaviors/num_word.dtsi> // Requires zmk-auto-layer module.
 #include <behaviors/unicode.dtsi> // Requires zmk-unicode module.
 
-#include "helper.h"
+#include "utils/helper.h"
 
 #include <dt-bindings/zmk/keys.h>
 #ifdef CONFIG_WIRELESS
@@ -331,9 +331,9 @@ ZMK_BASE_LAYER(Num,
 
 ZMK_BASE_LAYER(Sys,
 //╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮ ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
-                               _BT_SEL_KEYS_                            ,   &to BASE      &to EXTRA     &to TAP       &to GAME      &tog GAME   ,
+                               _BT_SEL_KEYS_                            ,   &to BASE      &to EXTRA     &to TAP       &to GAME      ___         ,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
-    &sys_reset    &bootloader                _BT_NAV_KEYS_              ,                  _OUT_KEYS_                 ___           ___         ,
+    &sys_reset    &bootloader                _BT_NAV_KEYS_              ,                  _OUT_KEYS_                 ___         &studio_unlock,
 //├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
     ___           ___           ___           ___           ___         ,   ___           ___           ___           ___           ___         ,
 //╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┤ ├─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
