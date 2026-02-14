@@ -70,20 +70,8 @@ Key mechanics included in the framework:
 
 ## Matrix Profiles
 
-Continuum supports multiple physical layouts through header selection:
-
-- `config/continuum/matrix/34.h` - generic 34-key split
-- `config/continuum/matrix/36.h` - generic 36-key split
-- `config/continuum/matrix/42.h` - generic 42-key split
-- `config/continuum/matrix/totem.h` - Totem 38-key mapping
-- `config/continuum/matrix/cornix.h` - Cornix 48-key mapping
-- `config/continuum/matrix/sofle.h` - Sofle 60-key mapping
-- `config/continuum/matrix/lily58.h` - Lily58-style 58-key mapping
-- `config/continuum/matrix/eyelash_sofle.h` - Eyelash Sofle mapping with encoder/joystick keys
-- `config/continuum/matrix/eyelash_corne36.h` - 36-key Corne variant with encoder/joystick keys
-- `config/continuum/matrix/eyelash_corne42.h` - 42-key Corne variant with encoder/joystick keys
-
-## How to Use
+Continuum supports multiple physical layouts through header selection
+`include` to use from `config/continuum/matrix/*.h` matches with your actual keyboard layout.
 
 ### Integration Pattern
 
@@ -113,22 +101,6 @@ Customized base-layer pattern:
 #include "continuum/matrix/totem.h"
 #include "continuum/base.keymap"
 ```
-
-### Current Integrations in This Repo
-
-- `config/urchin.keymap`
-- `config/totem.keymap`
-- `config/sofle.keymap`
-- `config/eyelash_sofle_dongle.keymap`
-- `config/corne.keymap`
-- `config/eyelash_corne.keymap`
-- `config/cornix.keymap`
-- `config/cornix_dongle_adapter.keymap`
-- `config/delta_omega.keymap`
-- `config/delta_omega_dongle.keymap`
-- `config/continuum/example.keymap`
-
-Other keyboards can be added by selecting a compatible matrix header and optionally overriding `ZMK_BASE_LAYER(...)`.
 
 ## Required Modules
 

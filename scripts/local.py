@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import fnmatch
+import os
 import shlex
 import shutil
 import subprocess
@@ -29,6 +31,62 @@ def load_matrix(build_matrix_path: Path) -> list[dict[str, Any]]:
     if not isinstance(include, list):
         raise ValueError(f"`include` must be a list in {build_matrix_path}")
     return [entry for entry in include if isinstance(entry, dict)]
+
+
+def detect_physical_cores() -> int | None:
+    # Linux: lscpu provides reliable core/socket topology in containers.
+    try:
+        lscpu = subprocess.run(
+            ["lscpu", "-p=CORE,SOCKET"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        core_pairs: set[tuple[int, int]] = set()
+        for line in lscpu.stdout.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = [part.strip() for part in line.split(",")]
+            if len(parts) < 2:
+                continue
+            if parts[0].isdigit() and parts[1].isdigit():
+                core_pairs.add((int(parts[0]), int(parts[1])))
+        if core_pairs:
+            return len(core_pairs)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        pass
+
+    # Linux fallback if lscpu is unavailable.
+    cpuinfo = Path("/proc/cpuinfo")
+    if cpuinfo.exists():
+        try:
+            core_pairs: set[tuple[int, int]] = set()
+            physical_id = 0
+            core_id = None
+            for raw_line in cpuinfo.read_text(encoding="utf-8", errors="ignore").splitlines():
+                line = raw_line.strip()
+                if not line:
+                    if core_id is not None:
+                        core_pairs.add((physical_id, core_id))
+                    physical_id = 0
+                    core_id = None
+                    continue
+                if ":" not in line:
+                    continue
+                key, value = [part.strip() for part in line.split(":", 1)]
+                if key == "physical id" and value.isdigit():
+                    physical_id = int(value)
+                elif key == "core id" and value.isdigit():
+                    core_id = int(value)
+            if core_id is not None:
+                core_pairs.add((physical_id, core_id))
+            if core_pairs:
+                return len(core_pairs)
+        except OSError:
+            pass
+
+    return None
 
 
 def default_artifact_name(entry: dict[str, Any]) -> str:
@@ -138,6 +196,21 @@ def override_zmk_revision(config_dir: Path, revision: str) -> None:
     )
 
 
+def remove_stale_git_locks(base_dir: Path) -> list[Path]:
+    removed: list[Path] = []
+
+    for git_dir in base_dir.rglob(".git"):
+        if not git_dir.is_dir():
+            continue
+        for lock_file in git_dir.rglob("*.lock"):
+            if not lock_file.is_file():
+                continue
+            lock_file.unlink(missing_ok=True)
+            removed.append(lock_file)
+
+    return removed
+
+
 def ensure_west_ready(base_dir: Path, config_dir: Path, skip_update: bool) -> None:
     if not (base_dir / ".west").exists():
         run(["west", "init", "-l", str(config_dir)], cwd=base_dir)
@@ -145,7 +218,17 @@ def ensure_west_ready(base_dir: Path, config_dir: Path, skip_update: bool) -> No
         run(["west", "config", "manifest.path", config_dir.name], cwd=base_dir)
 
     if not skip_update:
-        run(["west", "update", "--fetch-opt=--filter=tree:0"], cwd=base_dir)
+        try:
+            run(["west", "update", "--fetch-opt=--filter=tree:0"], cwd=base_dir)
+        except subprocess.CalledProcessError:
+            removed = remove_stale_git_locks(base_dir)
+            if not removed:
+                raise
+            print(
+                f"Detected stale git lock files. Removed {len(removed)} lock file(s) and retrying west update.",
+                flush=True,
+            )
+            run(["west", "update", "--fetch-opt=--filter=tree:0"], cwd=base_dir)
     run(["west", "zephyr-export"], cwd=base_dir)
 
 
@@ -169,13 +252,12 @@ def build_entry(
 
     artifact = artifact_name(entry)
     build_dir = build_root / artifact
-    if build_dir.exists():
-        shutil.rmtree(build_dir)
-    build_dir.mkdir(parents=True, exist_ok=True)
+    build_root.mkdir(parents=True, exist_ok=True)
 
-    cmd = ["west", "build", "-s", "zmk/app", "-d", str(build_dir), "-b", board]
+    cmd = ["west", "build", "-p", "-s", "zmk/app", "-d", str(build_dir), "-b", board]
     if snippet:
-        cmd.extend(["-S", snippet])
+        for snippet_name in shlex.split(snippet):
+            cmd.extend(["-S", snippet_name])
     cmd.append("--")
     cmd.append(f"-DZMK_CONFIG={config_dir}")
     if shield:
@@ -237,6 +319,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip west update for faster incremental builds.",
     )
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=None,
+        help=(
+            "Number of matrix entries to build in parallel. "
+            "Default: auto (min(selected entries, max(1, physical core count // 2)))."
+        ),
+    )
     parser.add_argument("--list", action="store_true", help="List artifact-name values and exit.")
     return parser.parse_args()
 
@@ -272,7 +363,8 @@ def main() -> int:
     # if zephyr/module.yml exists in repo, build from isolated base_dir and load repo as extra module.
     if (REPO_ROOT / "zephyr" / "module.yml").exists():
         config_dir = ensure_config_copy(src_config_path, base_dir, src_config_path.name)
-        extra_modules_dir: Path | None = stage_extra_modules_from_git(REPO_ROOT, base_dir)
+        # Stage the extra module into container-local /tmp to avoid host-mounted FS race issues.
+        extra_modules_dir: Path | None = stage_extra_modules_from_git(REPO_ROOT, Path("/tmp"))
     else:
         base_dir = REPO_ROOT
         config_dir = src_config_path
@@ -283,21 +375,89 @@ def main() -> int:
 
     ensure_west_ready(base_dir, config_dir, skip_update=args.skip_update)
 
-    produced: list[Path] = []
-    for entry in entries:
-        name = artifact_name(entry)
-        print(f"\n=== Building {name} ===", flush=True)
-        out = build_entry(
-            entry=entry,
-            base_dir=base_dir,
-            build_root=build_root,
-            output_dir=output_dir,
-            config_dir=config_dir,
-            fallback_binary=args.fallback_binary,
-            extra_modules_dir=extra_modules_dir,
+    logical_cores = max(1, os.cpu_count() or 1)
+    detected_physical_cores = detect_physical_cores()
+    physical_cores = logical_cores if detected_physical_cores is None else detected_physical_cores
+    # Physical cores should never exceed visible logical CPUs in this runtime.
+    physical_cores = max(1, min(physical_cores, logical_cores))
+    physical_core_cap = physical_cores
+    default_auto_cap = max(1, physical_cores // 2)
+
+    if args.jobs is None:
+        max_workers = min(len(entries), default_auto_cap)
+        print(
+            f"Auto-selected parallel jobs: {max_workers} "
+            f"(entries={len(entries)}, logical_cores={logical_cores}, "
+            f"physical_cores={physical_cores}, default_cap={default_auto_cap}).",
+            flush=True,
         )
-        produced.append(out)
-        print(f"Built artifact: {out}", flush=True)
+    else:
+        if args.jobs < 1:
+            raise ValueError("--jobs must be >= 1")
+        max_workers = min(args.jobs, len(entries))
+        if max_workers > physical_core_cap:
+            print(
+                f"--jobs {args.jobs} exceeds physical core count ({physical_core_cap}); "
+                f"capping to {physical_core_cap}.",
+                flush=True,
+            )
+            max_workers = physical_core_cap
+
+    produced: list[Path] = []
+    if max_workers == 1:
+        for entry in entries:
+            name = artifact_name(entry)
+            print(f"\n=== Building {name} ===", flush=True)
+            out = build_entry(
+                entry=entry,
+                base_dir=base_dir,
+                build_root=build_root,
+                output_dir=output_dir,
+                config_dir=config_dir,
+                fallback_binary=args.fallback_binary,
+                extra_modules_dir=extra_modules_dir,
+            )
+            produced.append(out)
+            print(f"Built artifact: {out}", flush=True)
+    else:
+        print(
+            f"Running {len(entries)} build(s) with up to {max_workers} parallel job(s).",
+            flush=True,
+        )
+        build_failures: list[tuple[str, Exception]] = []
+        future_to_name: dict[Any, str] = {}
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            for entry in entries:
+                name = artifact_name(entry)
+                print(f"\n=== Queueing {name} ===", flush=True)
+                future = executor.submit(
+                    build_entry,
+                    entry=entry,
+                    base_dir=base_dir,
+                    build_root=build_root,
+                    output_dir=output_dir,
+                    config_dir=config_dir,
+                    fallback_binary=args.fallback_binary,
+                    extra_modules_dir=extra_modules_dir,
+                )
+                future_to_name[future] = name
+
+            for future in as_completed(future_to_name):
+                name = future_to_name[future]
+                try:
+                    out = future.result()
+                except Exception as exc:  # noqa: BLE001
+                    build_failures.append((name, exc))
+                    print(f"Build failed for {name}: {exc}", file=sys.stderr, flush=True)
+                else:
+                    produced.append(out)
+                    print(f"Built artifact: {out}", flush=True)
+
+        if build_failures:
+            print("\nBuild completed with failures:", file=sys.stderr, flush=True)
+            for name, exc in build_failures:
+                print(f"- {name}: {exc}", file=sys.stderr, flush=True)
+            return 1
 
     print("\nBuild complete.", flush=True)
     for out in produced:

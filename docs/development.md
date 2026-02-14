@@ -50,6 +50,9 @@ docker compose run --rm zmk-build-release --artifact-names totem_left,totem_righ
 docker compose run --rm zmk-build-release --artifact-names "totem_*"
 docker compose run --rm zmk-build-release --artifact-names "*_left,*_right"
 
+# Build in parallel (up to 3 targets at a time)
+docker compose run --rm zmk-build-release --artifact-names "totem_*" --jobs 3
+
 # Build every target in build.yaml
 docker compose run --rm zmk-build-release
 
@@ -64,6 +67,9 @@ Notes:
 - Build directories are kept under `.build/local/build/`.
 - West workspace/cache state is kept under `.build/local/workspace/` (release) and `.build/local/workspace-main/` (main).
 - `--artifact-names` accepts exact names and wildcard patterns. If a pattern matches nothing, the script exits with an error.
+- `--jobs` controls matrix-level parallelism.
+- If `--jobs` is omitted, it auto-selects `min(selected entries, max(1, physical core count // 2))`.
+- Even when `--jobs` is provided, the runner caps it to physical core count.
 
 ### Direct docker run (without compose)
 
@@ -71,6 +77,9 @@ If you prefer not to use Docker Compose:
 
 ```bash
 docker run --rm -it -v "${PWD}:/workspace" -w /workspace zmkfirmware/zmk-build-arm:stable python3 scripts/local.py --artifact-names "totem_left,totem_right"
+
+# Parallel example
+docker run --rm -it -v "${PWD}:/workspace" -w /workspace zmkfirmware/zmk-build-arm:stable python3 scripts/local.py --artifact-names "totem_*" --jobs 3
 ```
 
 ### Why not plain CMake?

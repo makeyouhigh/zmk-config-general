@@ -22,6 +22,43 @@ This repository defines three dongle roles:
   - Dongle passively scans keyboard status advertisements and renders status UI.
   - It is an observer role, not a BLE input transport path.
 
+## Role Architecture Diagrams
+
+These diagrams are conceptual and describe firmware role topology only.
+
+### `dongle` role (single keyboard dedicated)
+
+```text
+[Keyboard Left] ----\
+                     >==== BLE split link ====> [Keyboard Right]
+                                     |
+                                     | BLE (input transport)
+                                     v
+                              [Dongle (role=dongle)]
+                                     |
+                                     | USB or BLE
+                                     v
+                                   [Host]
+```
+
+### `central` role (multi-keyboard central)
+
+```text
+[Keyboard Set A: L/R] --\
+[Keyboard Set B: L/R] ----> [Dongle (role=central)] ----> [Host]
+[Keyboard Set C: L/R] --/             ^
+                                      |
+                          Only one keyboard set active at a time
+```
+
+### `scanner` role (status observer)
+
+```text
+[Keyboard(s)] -- status advertisements --> [Dongle (role=scanner)] --> [Display/UI]
+     |
+     +-- input path to host is separate (scanner is not input transport)
+```
+
 ## Dongle Hardware Variants
 
 This repo uses two dongle hardware families:
@@ -45,36 +82,68 @@ Both hardware variants can run any of the roles above, as long as the matching r
 
 Role switching is a reflash workflow, not a runtime toggle.
 
+## Naming Convention
+
+This repository uses a fixed naming policy for dongle targets:
+
+- Single keyboard role targets:
+  - `<keyboard>_<hardware>_<role>`
+  - Examples:
+    - `totem_zdd_dongle`
+    - `totem_prospector_dongle`
+- Shared role targets (`central`, `scanner`):
+  - `<hardware>_<role>`
+  - Examples:
+    - `zdd_central`, `prospector_central`
+    - `zdd_scanner`, `prospector_scanner`
+
+Frozen identifiers:
+
+- Hardware IDs: `zdd`, `prospector`
+- Role IDs: `dongle`, `central`, `scanner`
+
 ## Concrete Build Examples
 
-These examples map directly to targets in `build.yaml`.
+These examples are naming and matrix templates.
+Some are planned-only and may not exist as shield files yet.
 
-1. `central` role (multi-keyboard central)
+1. `zdd` + `dongle` role (single keyboard)
    - `board: nice_nano_v2`
-   - `shield: dongle_central dongle_display`
-   - `snippet: common-config scanner-advertisement`
-   - `artifact-name: dongle_central`
-2. `dongle` role (single-keyboard dedicated)
+   - `shield: totem_zdd_dongle`
+   - `artifact-name: totem_zdd_dongle`
+2. `prospector` + `dongle` role (single keyboard)
+   - `board: <prospector_board>`
+   - `shield: totem_prospector_dongle`
+   - `artifact-name: totem_prospector_dongle`
+3. `zdd` + `central` role
    - `board: nice_nano_v2`
-   - `shield: totem_dongle dongle_display` (example keyboard family)
-   - `snippet: common-config scanner-advertisement`
-   - `artifact-name: totem_dongle`
-3. `scanner` role (status observer)
+   - `shield: zdd_central`
+   - `artifact-name: zdd_central`
+4. `prospector` + `central` role
+   - `board: <prospector_board>`
+   - `shield: prospector_central`
+   - `artifact-name: prospector_central`
+5. `zdd` + `scanner` role
    - `board: nice_nano_v2`
-   - `shield: dongle_scanner`
-   - `artifact-name: dongle_scanner`
+   - `shield: zdd_scanner`
+   - `artifact-name: zdd_scanner`
+6. `prospector` + `scanner` role
+   - `board: <prospector_board>`
+   - `shield: prospector_scanner`
+   - `artifact-name: prospector_scanner`
 
 ## Current Build Coverage
 
-Current state from `build.yaml`:
+Current state from `build.yaml` (checked on February 12, 2026):
 
-- `zdd` + `dongle` role: build targets exist (`totem_dongle`, `urchin_dongle`, `corne_dongle`, `eyelash_corne_dongle`, `sofle_dongle`, `eyelash_sofle_dongle`, `cornix_dongle`, `delta_omega_dongle`)
-- `zdd` + `central` role: shared build target exists (`dongle_central`)
-- `zdd` + `scanner` role: shared build target exists (`dongle_scanner`)
-- `prospector` hardware + YADS firmware track: planned (not yet in matrix)
-
-> [!NOTE]
-> `eyelash_sofle_dongle` currently uses Sofle-style dongle keymap behavior; eyelash-only extra inputs are not fully mapped yet.
+- Active dongle-related entries:
+  - `totem_zdd_dongle`
+  - `totem_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `totem_zdd_dongle_reset` (settings reset target for that hardware class)
+- Not active yet:
+  - `zdd_central`, `zdd_scanner`
+  - `prospector_central`, `prospector_scanner`
+  - `<keyboard>_prospector_dongle` family targets
 
 ## `central` Role: Multi-Keyboard Model
 
