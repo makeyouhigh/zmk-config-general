@@ -29,7 +29,7 @@ nRF Connect for Desktop's Programer is very useful for getting sd address and si
 
 ![Programmer](./Programmer.png)
 
-### Extracting SoftDevice (s130) for nRF51
+## Extracting SoftDevice (s130) for nRF51
 
 Command to extract SoftDevice (s130) section:
 
