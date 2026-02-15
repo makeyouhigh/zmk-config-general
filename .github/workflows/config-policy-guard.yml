@@ -1,0 +1,53 @@
+name: Config Policy Guard
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/config-policy-guard.yml"
+      - ".github/workflows/build.yml"
+      - "scripts/ci/check_config_policy.sh"
+      - "boards/**"
+      - "config/**"
+      - "snippets/**"
+      - "build.yaml"
+  pull_request:
+    paths:
+      - ".github/workflows/config-policy-guard.yml"
+      - ".github/workflows/build.yml"
+      - "scripts/ci/check_config_policy.sh"
+      - "boards/**"
+      - "config/**"
+      - "snippets/**"
+      - "build.yaml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: config-policy-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy-lint:
+    name: Enforce Config Policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run policy guard
+        shell: bash
+        run: bash scripts/ci/check_config_policy.sh
+
+  split-right-sanity:
+    name: Build Right-Side Sanity Targets
+    needs: policy-lint
+    uses: ./.github/workflows/build.yml
+    with:
+      build_matrix: >
+        {"include":[
+          {"board":"seeeduino_xiao_ble","shield":"totem_right","artifact-name":"guard_totem_right"},
+          {"board":"eyelash_corne_right","shield":"nice_view","artifact-name":"guard_eyelash_corne_right"}
+        ]}
+      archive_name: guard-right-sanity

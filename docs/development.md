@@ -21,6 +21,27 @@ Build and release are matrix-driven via `build.yaml`.
 
 This keeps builds aligned with pinned dependencies in `config/west.yml`.
 
+## Configuration Policy (Split Role)
+
+Use this layering to avoid split-side regressions and warning-only misconfigurations:
+
+1. Board/shield role defaults:
+   - Put side-specific role and transport defaults in board/shield defconfig files (`Kconfig.defconfig`, `*_defconfig`).
+   - Examples: `CONFIG_ZMK_USB`, `CONFIG_ZMK_BLE`, split role central flags.
+2. Side overlay/conf overrides:
+   - Keep side-only overrides in side-specific files (`*_left.conf`, `*_right.conf`) only when needed.
+3. User config (`config/*.conf`):
+   - Keep this layer side-neutral.
+   - Do not set split role or transport ownership here.
+4. Shared snippet config (`snippets/common-config/common-config.conf`):
+   - Keep this hardware-agnostic.
+   - Do not force hardware-specific options globally (for example global `CONFIG_SPI=y`).
+
+Guardrails:
+
+- `.github/workflows/config-policy-guard.yml` enforces the policy on push/PR.
+- The guard runs static policy checks and a lightweight right-side CI build sanity pass.
+
 ## Local Build (Docker, CI-like)
 
 Two local services are provided in `docker-compose.yml`:
