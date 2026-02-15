@@ -1,9 +1,6 @@
 {
-  "id": "totem",
-  "name": "totem",
-  "url": "https://github.com/GEIGEIGEIST/TOTEM",
   "layouts": {
-    "LAYOUT": {
+    "Default Layout": {
       "layout": [
         {
           "row": 0,

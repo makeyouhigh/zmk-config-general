@@ -1,6 +1,4 @@
 manifest:
-  defaults:
-    revision: v0.3.0
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
@@ -16,27 +14,34 @@ manifest:
   projects:
     - name: zmk
       remote: zmkfirmware
+      revision: v0.3.0
       import: app/west.yml
 
     # Urob's ZMK modules
     - name: zmk-adaptive-key
       path: modules/zmk/adaptive-key
       remote: urob
+      revision: v0.3.0
     - name: zmk-auto-layer
       path: modules/zmk/auto-layer
       remote: urob
+      revision: v0.3.0
     - name: zmk-helpers
       path: modules/zmk/helpers
       remote: urob
+      revision: v0.3.0
     - name: zmk-leader-key
       path: modules/zmk/leader-key
       remote: urob
+      revision: v0.3.0
     - name: zmk-tri-state
       path: modules/zmk/tri-state
       remote: urob
+      revision: v0.3.0
     - name: zmk-unicode
       path: modules/zmk/unicode
       remote: urob
+      revision: v0.3.0
 
     - name: nice-view-gem
       remote: m165437
