@@ -1,6 +1,6 @@
 / {
     model = "cornix_e73";
-    compatible = "hitsmaxft,cornix";
+    compatible = "jzf,cornix";
 
     chosen {
         zephyr,code-partition = &code_partition;

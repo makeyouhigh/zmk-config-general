@@ -1,9 +1,6 @@
 {
-  "id": "eyelash_corne",
-  "name": "Eyelash Corne",
   "layouts": {
     "Default Layout": {
-      "name": "default_layout",
       "layout": [
         {
           "row": 0,

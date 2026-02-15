@@ -27,7 +27,7 @@ python3 uf2conv.py s140_sd_only.bin -f 0xada52840 -b 0x1000 -c -o s140_restore.u
 
 nRF Connect for Desktop's Programer is very useful for getting sd address and size from bootloader hex file.
 
-<img width="736" height="691" alt="图片" src="https://github.com/user-attachments/assets/be124646-870a-48d6-9387-d7cb043f4848" />
+![Programmer](./Programmer.png)
 
 ### Extracting SoftDevice (s130) for nRF51
 
