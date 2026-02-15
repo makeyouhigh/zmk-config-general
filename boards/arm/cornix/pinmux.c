@@ -4,17 +4,26 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/sys/sys_io.h>
 #include <zephyr/devicetree.h>
+#include <errno.h>
 
 static int pinmux_cornix_init(void) {
-    #if (CONFIG_BOARD_CORNIX_LEFT || CONFIG_BOARD_CORNIX_RIGHT)
-      const struct device *p0 = DEVICE_DT_GET(DT_NODELABEL(gpio0));
-      #if CONFIG_BOARD_CORNIX_CHARGER
-          gpio_pin_configure(p0, 5, GPIO_OUTPUT);
-          gpio_pin_set(p0, 5, 0);
-      #else
-          gpio_pin_configure(p0, 5, GPIO_INPUT);
-      #endif
-    #endif
+#if (CONFIG_BOARD_CORNIX_LEFT || CONFIG_BOARD_CORNIX_RIGHT)
+    const struct device *p0 = DEVICE_DT_GET(DT_NODELABEL(gpio0));
+    int err;
+
+    if (!device_is_ready(p0)) {
+        return -ENODEV;
+    }
+
+#if CONFIG_BOARD_CORNIX_CHARGER
+    err = gpio_pin_configure(p0, 5, GPIO_OUTPUT_INACTIVE);
+#else
+    err = gpio_pin_configure(p0, 5, GPIO_INPUT);
+#endif
+    if (err) {
+        return err;
+    }
+#endif
     return 0;
 }
 

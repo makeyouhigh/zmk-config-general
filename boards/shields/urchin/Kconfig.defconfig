@@ -6,7 +6,24 @@ config ZMK_KEYBOARD_NAME
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
+config ZMK_USB
+    default y
+
+config ZMK_BLE
+    default n
+
 endif
+
+if SHIELD_URCHIN_LEFT
+
+config ZMK_USB
+    default n
+
+config ZMK_BLE
+    default y
+
+endif
+
 
 if SHIELD_URCHIN_LEFT || SHIELD_URCHIN_RIGHT
 config ZMK_SPLIT
