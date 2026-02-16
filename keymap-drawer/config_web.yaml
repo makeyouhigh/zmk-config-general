@@ -1,16 +1,61 @@
+draw_config:
+  key_w: 60
+  key_h: 56
+  split_gap: 30.0
+  combo_w: 28
+  combo_h: 26
+  key_rx: 6.0
+  key_ry: 6.0
+  dark_mode: auto
+  n_columns: 1
+  separate_combo_diagrams: false
+  combo_diagrams_scale: 2
+  inner_pad_w: 2.0
+  inner_pad_h: 2.0
+  outer_pad_w: 30.0
+  outer_pad_h: 56.0
+  line_spacing: 1.2
+  arc_radius: 6.0
+  append_colon_to_layer_header: false
+  small_pad: 2.0
+  legend_rel_x: 0.0
+  legend_rel_y: 0.0
+  draw_key_sides: false
+  key_side_pars:
+    rel_x: 0.0
+    rel_y: 4.0
+    rel_w: 12.0
+    rel_h: 12.0
+    rx: 4.0
+    ry: 4.0
+  svg_extra_style: ""
+  footer_text: "jon's zmk-config"
+  shrink_wide_legends: 8
+  style_layer_activators: true
+  glyph_tap_size: 14
+  glyph_hold_size: 12
+  glyph_shifted_size: 10
+  glyphs: {}
+
 parse_config:
   preprocess: true
+  skip_binding_parsing: false
 
-  zmk_additional_includes:
-    - "config"
-    - "modules/zmk/helpers/include"
-    - "modules/zmk/auto-layer/dts"
-    - "modules/zmk/unicode/dts"
-    - "modules/zmk/unicode/include"
+  # Keep these lightweight for web portability.
+  qmk_remove_keycode_prefix:
+    - KC_
 
-  zmk_preamble: |
-    #define KEYMAP_DRAWER
-    #define CONFIG_WIRELESS
+  zmk_remove_keycode_prefix: []
+
+  # Web-safe preamble/includes. If parsing your full repo keymaps in CLI, use keymap-drawer/config.yaml instead.
+  zmk_preamble: "#define KEYMAP_DRAWER"
+  zmk_additional_includes: []
+
+  sticky_label: sticky
+  toggle_label: toggle
+  tap_toggle_label: tap-toggle
+  layer_legend_map: {}
+  mark_alternate_layer_activators: false
 
   modifier_fn_map:
     left_ctrl: Ctrl
@@ -23,6 +68,9 @@ parse_config:
     right_gui: Gui
     keycode_combiner: "{mods}+{key}"
     mod_combiner: "{mod_1}+{mod_2}"
+    special_combinations:
+      left_ctrl+left_alt+left_gui+left_shift: Hyper
+      left_ctrl+left_alt+left_shift: Meh
 
   raw_binding_map:
     # core behaviors
@@ -37,16 +85,14 @@ parse_config:
     "&swapper": Next Win
     "&dot_spc": Sentence
 
-    "&smart_num NUM 0":
-      { "tap": "NumWord", "hold": "Num", "shifted": "Sticky Num" }
-    "&num_dance": { "tap": "NumWord", "shifted": "Sticky Num" }
-    "&magic_shift LSHFT 0":
-      { "tap": "Repeat", "hold": "Shift", "shifted": "Caps Word" }
-    "&magic_shift": { "tap": "Repeat", "hold": "Shift", "shifted": "Caps Word" }
+    "&smart_num NUM 0": { tap: NumWord, hold: Num, shifted: Sticky Num }
+    "&num_dance": { tap: NumWord, shifted: Sticky Num }
+    "&magic_shift LSHFT 0": { tap: Repeat, hold: Shift, shifted: Caps Word }
+    "&magic_shift": { tap: Repeat, hold: Shift, shifted: Caps Word }
 
-    "&lt_spc NAV 0": { "tap": "Spc", "hold": "Nav", "shifted": "Sentence" }
-    "&lt_qxl SYM 0": { "tap": "?", "hold": "Sym", "shifted": "!" }
-    "&lt_btn BTN Z": { "tap": "Z", "hold": "Btn" }
+    "&lt_spc NAV 0": { tap: Spc, hold: Nav, shifted: Sentence }
+    "&lt_qxl SYM 0": { tap: "?", hold: Sym, shifted: "!" }
+    "&lt_btn BTN Z": { tap: Z, hold: Btn }
 
     # bluetooth and output
     "&bt BT_SEL 0": BT 1
@@ -103,10 +149,10 @@ parse_config:
     # combo helper hold-taps
     "&hm_combo_ldr": Leader
     "&hm_combo_ldrsh": Shift+Leader
-    "&hm_combo_lpar": { "tap": "(", "right": "<" }
-    "&hm_combo_rpar": { "tap": ")", "right": ">" }
-    "&kp LBKT": { "tap": "[", "right": "{" }
-    "&kp RBKT": { "tap": "]", "right": "}" }
+    "&hm_combo_lpar": { tap: "(", right: "<" }
+    "&hm_combo_rpar": { tap: ")", right: ">" }
+    "&kp LBKT": { tap: "[", right: "{" }
+    "&kp RBKT": { tap: "]", right: "}" }
 
     # pointer and mouse
     "&mmv MOVE_UP": Mouse ↑
@@ -144,16 +190,9 @@ parse_config:
     "&ind_con": Conn status
     "&ind_bat": Batt level
 
-  trans_legend: { "tap": "", "type": "trans" }
-
-  zmk_combos:
-    combo_cut: { align: bottom, offset: 0.10 }
-    combo_ldrsh: { align: top, offset: 1.35 }
-
-    combo_lt: { hidden: true }
-    combo_gt: { hidden: true }
-    combo_lbrc: { hidden: true }
-    combo_rbrc: { hidden: true }
+  trans_legend:
+    tap: ""
+    type: trans
 
   zmk_keycode_map:
     # modifiers
@@ -208,8 +247,8 @@ parse_config:
     ASTRK: "*"
     AT: "@"
     AT_SIGN: "@"
-    BACKSLASH: "\\"
-    BSLH: "\\"
+    BACKSLASH: '\\'
+    BSLH: '\\'
     CARET: "^"
     COLON: ":"
     COMMA: ","
@@ -235,7 +274,7 @@ parse_config:
     LPAR: "("
     LT: "<"
     MINUS: "-"
-    NON_US_BACKSLASH: "\\"
+    NON_US_BACKSLASH: '\\'
     NON_US_BSLH: "|"
     NON_US_HASH: "#"
     NUHS: "#"
@@ -265,9 +304,11 @@ parse_config:
     UNDER: "_"
     UNDERSCORE: "_"
 
-draw_config:
-  append_colon_to_layer_header: false
-  dark_mode: auto
-  style_layer_activators: true
-  shrink_wide_legends: 8
-  footer_text: "jon's zmk-config"
+  zmk_combos:
+    combo_cut: { align: bottom, offset: 0.05 }
+    combo_ldrsh: { align: top, offset: 1.35 }
+
+    combo_lt: { hidden: true }
+    combo_gt: { hidden: true }
+    combo_lbrc: { hidden: true }
+    combo_rbrc: { hidden: true }

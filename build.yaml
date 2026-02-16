@@ -27,20 +27,6 @@ include:
   - board: seeeduino_xiao_ble
     shield: totem_right
     artifact-name: totem_right
-  # Settings reset is not required for the XIAO
-  # - board: seeeduino_xiao_ble
-  #   shield: settings_reset
-  #   artifact-name: totem_reset
-  # - board: nice_nano_v2
-  #   shield: totem_zdd_dongle zdd_dongle_base dongle_display
-  #   snippet: common-config studio-rpc-usb-uart
-  #   artifact-name: totem_zdd_dongle
-  # - board: seeeduino_xiao_ble
-  #   shield: totem_left_w_dongle
-  #   artifact-name: totem_left_w_dongle
-  # - board: nice_nano_v2
-  #   shield: settings_reset
-  #   artifact-name: totem_zdd_dongle_reset
 
   # Urchin
   - board: nice_nano_v2
