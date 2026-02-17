@@ -8,22 +8,20 @@
 
 This document defines the ZMK configuration for the Totem keyboard as implemented in this repository. It assumes familiarity with ZMK, split keyboard firmware, and BLE behavior.
 
-TOTEM is a 38-key column-staggered split keyboard. In this repository it is treated strictly as a ZMK-based, BLE peripheral device. Typical builds use a XIAO BLE with a UF2-capable bootloader.
+TOTEM is a 38-key column-staggered split keyboard. This repository supports both direct split operation and dongle-based split operation.
 
 ## Support Snapshot
 
 Implemented matrix targets:
 
-| Target | Board | Shield | Snippet | Artifact Name | Status |
-| --- | --- | --- | --- | --- | --- |
-| Left half | `seeeduino_xiao_ble` | `totem_left` | `common-config studio-rpc-usb-uart` | `totem_left` | Active |
-| Right half | `seeeduino_xiao_ble` | `totem_right` | none | `totem_right` | Active |
-| Reset | `seeeduino_xiao_ble` | `settings_reset` | none | `totem_reset` | Active |
-
-Planned targets (not active in current build matrix):
-
-- `totem_zdd_dongle`
-- `totem_left_w_dongle`
+| Target                    | Board                | Shield                            | Snippet                             | Artifact Name            | Status |
+| ------------------------- | -------------------- | --------------------------------- | ----------------------------------- | ------------------------ | ------ |
+| Left half (direct split)  | `seeeduino_xiao_ble` | `totem_left`                      | `common-config studio-rpc-usb-uart` | `totem_left`             | Active |
+| Right half                | `seeeduino_xiao_ble` | `totem_right`                     | none                                | `totem_right`            | Active |
+| Left half (dongle split)  | `seeeduino_xiao_ble` | `totem_left_w_dongle`             | none                                | `totem_left_w_dongle`    | Active |
+| Dongle (single keyboard)  | `nice_nano_v2`       | `totem_zdd_dongle dongle_display` | `studio-rpc-usb-uart`               | `totem_zdd_dongle`       | Active |
+| Keyboard reset            | `seeeduino_xiao_ble` | `settings_reset`                  | none                                | `totem_reset`            | Active |
+| Dongle reset              | `nice_nano_v2`       | `settings_reset`                  | none                                | `totem_zdd_dongle_reset` | Active |
 
 ## Reference Material
 
@@ -65,19 +63,15 @@ Implemented paths:
 - `build.yaml`
   CI/local artifact matrix entries.
 
-Planned/legacy references kept for continuity:
-
-- `config/totem_zdd_dongle.keymap` (planned target path)
-
 The shield-level keymap under `boards/shields/totem/` is treated as a factory fallback only. It is not intended for customization.
 
 ## Operational Constraints
 
-- TOTEM operates only as a BLE peripheral.
-- It cannot act as a BLE central.
-- BLE role selection is compile-time.
-- When used with a dongle, direct host BLE pairing is disabled.
-- Switching BLE topology requires reflashing and rebonding.
+- BLE role and split topology are compile-time decisions.
+- In dongle topology, `totem_zdd_dongle` is the split BLE central and both keyboard halves are peripherals.
+- When used with a dongle topology, direct host pairing for keyboard halves is not used.
+- Switching topology requires reflashing and rebonding.
+- `CONFIG_ZMK_BLE_CLEAR_BONDS_ON_START` is disabled in shared config, so stale bonds persist until explicit reset/clear.
 - All global BLE and dongle constraints defined in the root README apply without exception.
 
 ## Non-Goals
@@ -102,34 +96,56 @@ Local Docker (recommended):
 # list artifacts
 docker compose run --rm zmk-build-release --list
 
-# build only Totem targets
+# build direct split targets
 docker compose run --rm zmk-build-release --artifact-names totem_left,totem_right,totem_reset
+
+# build dongle split targets
+docker compose run --rm zmk-build-release --artifact-names totem_left_w_dongle,totem_right,totem_zdd_dongle,totem_zdd_dongle_reset,totem_reset
 ```
 
 Expected active artifacts:
 
 - `totem_left.uf2`
+- `totem_left_w_dongle.uf2`
 - `totem_right.uf2`
+- `totem_zdd_dongle.uf2`
 - `totem_reset.uf2`
+- `totem_zdd_dongle_reset.uf2`
 
 ### Flashing
 
-Assumes XIAO BLE with UF2 bootloader.
+Assumes XIAO BLE for halves and nice!nano v2 for dongle, all with UF2 bootloader support.
 
-1. Connect the left half to the PC via USB.
-2. Double-tap reset to enter bootloader mode.
-3. Optional: flash `totem_reset.uf2` to clear state.
-4. Copy `totem_left.uf2` to the mounted drive.
-5. Repeat for the right half using `totem_right.uf2`.
-6. Disconnect USB and power halves normally.
+Direct split (`totem_left` + `totem_right`):
+
+1. Connect a half to the PC via USB and enter bootloader mode.
+2. Optional: flash `totem_reset.uf2` if you need to clear settings/bonds.
+3. Flash `totem_left.uf2` to the left half.
+4. Flash `totem_right.uf2` to the right half.
+5. Power-cycle both halves.
+
+Dongle split (`totem_zdd_dongle` + `totem_left_w_dongle` + `totem_right`), clean start recommended:
+
+1. Flash reset firmware first:
+   - `totem_zdd_dongle_reset.uf2` to the dongle.
+   - `totem_reset.uf2` to both keyboard halves.
+2. Flash runtime firmware:
+   - `totem_zdd_dongle.uf2` to the dongle.
+   - `totem_left_w_dongle.uf2` to the left half.
+   - `totem_right.uf2` to the right half.
+3. Remove old dongle bond on the host, then pair the host to the dongle again.
+4. Power-cycle dongle and both halves if split links do not reconnect immediately.
 
 Artifact-to-device mapping:
 
-| Artifact | Flash To |
-| --- | --- |
-| `totem_left.uf2` | Left half |
-| `totem_right.uf2` | Right half |
-| `totem_reset.uf2` | Any side when clearing settings/bonds |
+| Artifact                     | Flash To                                      |
+| ---------------------------- | --------------------------------------------- |
+| `totem_left.uf2`             | Left half (direct split)                      |
+| `totem_left_w_dongle.uf2`    | Left half (dongle split)                      |
+| `totem_right.uf2`            | Right half                                    |
+| `totem_zdd_dongle.uf2`       | Dongle                                        |
+| `totem_reset.uf2`            | Keyboard half for clearing settings/bonds     |
+| `totem_zdd_dongle_reset.uf2` | Dongle for clearing settings/bonds            |
 
 ## Configuration
 
@@ -144,7 +160,7 @@ Example baseline:
 
 # Bluetooth
 CONFIG_ZMK_BLE=y
-CONFIG_ZMK_BLE_CLEAR_BONDS_ON_STARTUP=n
+CONFIG_ZMK_BLE_CLEAR_BONDS_ON_START=n
 
 # Power management
 CONFIG_ZMK_SLEEP=y
@@ -175,15 +191,16 @@ No changes are required if the current layout matches intended behavior.
 
 ## Troubleshooting
 
-- If halves do not connect, flash `totem_reset.uf2` and then reflash both sides.
-- If BLE pairing fails, remove host bonds and re-pair after reflashing.
+- If dongle is connected to host but halves do not connect, stale split bonds are the most common cause.
+- For stale split bonds, run full reset-first sequence on dongle and both halves, then flash runtime firmware again.
+- If BLE pairing fails after reflashing, remove host bond for the dongle and pair again.
 - Uneven sleep or wake behavior usually indicates mismatched firmware batch or stale state.
 - If Studio does not connect on left side, confirm `totem_left` still uses `common-config studio-rpc-usb-uart` in `build.yaml`.
 
-Successful operation is indicated by stable split communication followed by host BLE connection.
+Successful operation is indicated by stable split communication followed by stable host connection for the selected topology.
 
 ## Status
 
 - Totem split targets are active in `build.yaml`.
-- Dongle-related Totem targets are documented as planned follow-up.
+- Totem dongle-related targets are active in `build.yaml`.
 - Canonical reference for Totem within this repository.
