@@ -134,12 +134,18 @@ Some are planned-only and may not exist as shield files yet.
 
 ## Current Build Coverage
 
-Current state from `build.yaml` (checked on February 12, 2026):
+Current state from `build.yaml` (checked on February 17, 2026):
 
 - Active dongle-related entries:
   - `totem_zdd_dongle`
   - `totem_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `totem_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `urchin_zdd_dongle`
+  - `urchin_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `urchin_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `delta_omega_zdd_dongle`
+  - `delta_omega_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `delta_omega_zdd_dongle_reset` (settings reset target for that hardware class)
 - Not active yet:
   - `zdd_central`, `zdd_scanner`
   - `prospector_central`, `prospector_scanner`
