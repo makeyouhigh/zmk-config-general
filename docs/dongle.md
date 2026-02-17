@@ -105,7 +105,7 @@ Frozen identifiers:
 ## Concrete Build Examples
 
 These examples are naming and matrix templates.
-Some are planned-only and may not exist as shield files yet.
+Some are planned-only depending on current matrix coverage.
 
 1. `zdd` + `dongle` role (single keyboard)
    - `board: nice_nano_v2`
@@ -117,7 +117,7 @@ Some are planned-only and may not exist as shield files yet.
    - `artifact-name: totem_prospector_dongle`
 3. `zdd` + `central` role
    - `board: nice_nano_v2`
-   - `shield: zdd_central`
+   - `shield: zdd_central dongle_display`
    - `artifact-name: zdd_central`
 4. `prospector` + `central` role
    - `board: <prospector_board>`
@@ -146,8 +146,9 @@ Current state from `build.yaml` (checked on February 17, 2026):
   - `delta_omega_zdd_dongle`
   - `delta_omega_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `delta_omega_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `zdd_central`
 - Not active yet:
-  - `zdd_central`, `zdd_scanner`
+  - `zdd_scanner`
   - `prospector_central`, `prospector_scanner`
   - `<keyboard>_prospector_dongle` family targets
 
@@ -170,6 +171,10 @@ This is a swap model, not a multi-input model.
 - Bond storage must fit the total peripheral count.
 
 If there are `N` split keyboards, plan for up to `2N` bonded peripherals.
+
+Repository default for `zdd_central` currently sets:
+
+- `CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=6`
 
 ### Pairing Procedure (Recommended)
 
