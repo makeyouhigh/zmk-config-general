@@ -3,7 +3,7 @@
 / {
     zdd_central_layout: zdd_central_layout {
         compatible = "zmk,physical-layout";
-        display-name = "Central 10x4";
+        display-name = "ZDD Central";
 
         keys
             = <&key_physical_attrs 100 100   0   0 0 0 0>
@@ -36,16 +36,10 @@
             , <&key_physical_attrs 100 100 700 200 0 0 0>
             , <&key_physical_attrs 100 100 800 200 0 0 0>
             , <&key_physical_attrs 100 100 900 200 0 0 0>
-            , <&key_physical_attrs 100 100   0 300 0 0 0>
-            , <&key_physical_attrs 100 100 100 300 0 0 0>
-            , <&key_physical_attrs 100 100 200 300 0 0 0>
             , <&key_physical_attrs 100 100 300 300 0 0 0>
             , <&key_physical_attrs 100 100 400 300 0 0 0>
             , <&key_physical_attrs 100 100 500 300 0 0 0>
             , <&key_physical_attrs 100 100 600 300 0 0 0>
-            , <&key_physical_attrs 100 100 700 300 0 0 0>
-            , <&key_physical_attrs 100 100 800 300 0 0 0>
-            , <&key_physical_attrs 100 100 900 300 0 0 0>
             ;
     };
 };
