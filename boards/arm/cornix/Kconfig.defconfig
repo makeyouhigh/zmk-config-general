@@ -55,12 +55,6 @@ config BT_CTLR
 config BOARD_CORNIX_CHARGER
     default y
 
-config ZMK_SPLIT
-	default y
-
-config ZMK_BLE
-	default y
-
 ## disable rgb by default
 config ZMK_RGB_UNDERGLOW
 	default n
