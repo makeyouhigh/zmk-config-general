@@ -6,22 +6,6 @@ config ZMK_KEYBOARD_NAME
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
-config ZMK_USB
-    default y
-
-config ZMK_BLE
-    default n
-
-endif
-
-if SHIELD_DELTA_OMEGA_RIGHT
-
-config ZMK_USB
-    default n
-
-config ZMK_BLE
-    default y
-
 endif
 
 if SHIELD_DELTA_OMEGA_LEFT || SHIELD_DELTA_OMEGA_RIGHT
@@ -43,16 +27,8 @@ if SHIELD_DELTA_OMEGA_ZDD_DONGLE
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
-if ZMK_SPLIT_ROLE_CENTRAL
-
 config ZMK_KEYBOARD_NAME
     default "Delta Omega ZDD"
-
-endif # ZMK_SPLIT_ROLE_CENTRAL
-
-endif # SHIELD_DELTA_OMEGA_ZDD_DONGLE
-
-if SHIELD_DELTA_OMEGA_ZDD_DONGLE
 
 if ZMK_DISPLAY
 
