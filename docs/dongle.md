@@ -134,7 +134,7 @@ Some are planned-only depending on current matrix coverage.
 
 ## Current Build Coverage
 
-Current state from `build.yaml` (checked on February 17, 2026):
+Current state from `build.yaml` (checked on February 19, 2026):
 
 - Active dongle-related entries:
   - `totem_zdd_dongle`
@@ -146,6 +146,21 @@ Current state from `build.yaml` (checked on February 17, 2026):
   - `delta_omega_zdd_dongle`
   - `delta_omega_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `delta_omega_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `corne_zdd_dongle`
+  - `corne_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `corne_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `eyelash_corne_zdd_dongle`
+  - `eyelash_corne_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `eyelash_corne_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `sofle_zdd_dongle`
+  - `sofle_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `sofle_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `eyelash_sofle_zdd_dongle`
+  - `eyelash_sofle_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `eyelash_sofle_zdd_dongle_reset` (settings reset target for that hardware class)
+  - `cornix_zdd_dongle`
+  - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
+  - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
   - `zdd_central`
 - Not active yet:
   - `zdd_scanner`

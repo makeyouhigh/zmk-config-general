@@ -13,6 +13,9 @@ Implemented matrix targets:
 | Left half | `nice_nano_v2` | `sofle_left` | `common-config studio-rpc-usb-uart` | `sofle_left` | Active |
 | Right half | `nice_nano_v2` | `sofle_right` | none | `sofle_right` | Active |
 | Reset | `nice_nano_v2` | `settings_reset` | none | `sofle_reset` | Active |
+| Left half (dongle split) | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | none | `sofle_left_w_dongle` | Active |
+| Dongle (single keyboard) | `nice_nano_v2` | `sofle_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
+| Dongle reset | `nice_nano_v2` | `settings_reset` | none | `sofle_zdd_dongle_reset` | Active |
 
 Related implemented targets for Eyelash Sofle:
 
@@ -21,13 +24,9 @@ Related implemented targets for Eyelash Sofle:
 | Left half | `eyelash_sofle_left` | `nice_view` | `common-config studio-rpc-usb-uart` | `eyelash_sofle_left` | Active |
 | Right half | `eyelash_sofle_right` | `nice_view` | none | `eyelash_sofle_right` | Active |
 | Reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_reset` | Active |
-
-Planned targets (not active in current build matrix):
-
-- `sofle_dongle`
-- `sofle_left_w_dongle`
-- `eyelash_sofle_dongle`
-- `eyelash_sofle_left_w_dongle`
+| Left half (dongle split) | `eyelash_sofle_left` | `nice_view` | none | `eyelash_sofle_left_w_dongle` | Active |
+| Dongle (single keyboard) | `nice_nano_v2` | `eyelash_sofle_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
+| Dongle reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_zdd_dongle_reset` | Active |
 
 ## Reference Material
 
@@ -73,11 +72,12 @@ Related implemented paths for Eyelash Sofle:
 - `boards/arm/eyelash_sofle/`
 - `config/eyelash_sofle.conf`
 - `config/eyelash_sofle.keymap`
+- `boards/shields/eyelash_sofle/`
 
-Planned/legacy references kept for continuity:
+Dongle-specific config overrides:
 
-- `config/sofle_dongle.keymap` (planned target path)
-- `config/eyelash_sofle_dongle.keymap` (planned target path)
+- `config/sofle_zdd_dongle.conf`
+- `config/eyelash_sofle_zdd_dongle.conf`
 
 ## How to Use
 
@@ -94,6 +94,9 @@ docker compose run --rm zmk-build-release --list
 
 # build only Sofle and Eyelash Sofle split targets
 docker compose run --rm zmk-build-release --artifact-names sofle_left,sofle_right,sofle_reset,eyelash_sofle_left,eyelash_sofle_right,eyelash_sofle_reset
+
+# build Sofle and Eyelash Sofle dongle targets
+docker compose run --rm zmk-build-release --artifact-names sofle_left_w_dongle,sofle_zdd_dongle,sofle_zdd_dongle_reset,eyelash_sofle_left_w_dongle,eyelash_sofle_zdd_dongle,eyelash_sofle_zdd_dongle_reset
 ```
 
 ### Flashing
@@ -111,9 +114,15 @@ Artifact-to-device mapping:
 | `sofle_left.uf2` | Sofle left half |
 | `sofle_right.uf2` | Sofle right half |
 | `sofle_reset.uf2` | Sofle side when clearing settings/bonds |
+| `sofle_left_w_dongle.uf2` | Sofle left half for dongle topology |
+| `sofle_zdd_dongle.uf2` | Sofle dedicated dongle |
+| `sofle_zdd_dongle_reset.uf2` | Sofle dongle reset target |
 | `eyelash_sofle_left.uf2` | Eyelash Sofle left half |
 | `eyelash_sofle_right.uf2` | Eyelash Sofle right half |
 | `eyelash_sofle_reset.uf2` | Eyelash Sofle side when clearing settings/bonds |
+| `eyelash_sofle_left_w_dongle.uf2` | Eyelash Sofle left half for dongle topology |
+| `eyelash_sofle_zdd_dongle.uf2` | Eyelash Sofle dedicated dongle |
+| `eyelash_sofle_zdd_dongle_reset.uf2` | Eyelash Sofle dongle reset target |
 
 ## Configuration
 
@@ -132,4 +141,4 @@ Artifact-to-device mapping:
 
 - Sofle split targets are active in `build.yaml`.
 - Eyelash Sofle split targets are active in `build.yaml`.
-- Dongle-related Sofle/Eyelash Sofle targets are documented as planned follow-up.
+- Sofle and Eyelash Sofle dongle targets are active in `build.yaml`.

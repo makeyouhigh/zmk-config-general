@@ -26,6 +26,17 @@ This document covers the Cornix integration used in this repository.
 
 ![Cornix keymap](/docs/images/cornix_keymap.svg)
 
+## Support Snapshot
+
+| Target | Board | Shield | Snippet | Artifact Name | Status |
+| --- | --- | --- | --- | --- | --- |
+| Left half | `cornix_left` | none | `common-config studio-rpc-usb-uart` | `cornix_left` | Active |
+| Right half | `cornix_right` | none | none | `cornix_right` | Active |
+| Reset | `cornix_right` | `settings_reset` | none | `cornix_reset` | Active |
+| Left half (dongle split) | `cornix_left` | none | none | `cornix_left_w_dongle` | Active |
+| Dongle (single keyboard) | `nice_nano_v2` | `cornix_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `cornix_zdd_dongle` | Active |
+| Dongle reset | `nice_nano_v2` | `settings_reset` | none | `cornix_zdd_dongle_reset` | Active |
+
 ## Warning: device breakdown recovery
 
 > [!Note]
@@ -176,13 +187,15 @@ Use your preferred method to build
 
    > [!NOTE]
    >
-   > 1. Use `cornix_left`, `cornix_right`, and `cornix_reset`.
-   > 2. Add `cornix_indicator` shield to enable RGB LED (higher power use).
+   > 1. Use `cornix_left`, `cornix_right`, and `cornix_reset` for direct split mode.
+   > 2. Use `cornix_left_w_dongle`, `cornix_zdd_dongle`, and `cornix_zdd_dongle_reset` for dongle mode.
+   > 3. Add `cornix_indicator` shield to enable RGB LED (higher power use).
 
    ```yaml
    include:
      - board: cornix_left
        # shield: cornix_indicator
+       snippet: common-config studio-rpc-usb-uart
        artifact-name: cornix_left
 
      - board: cornix_right
@@ -191,7 +204,20 @@ Use your preferred method to build
 
      - board: cornix_right
        shield: settings_reset
-       artifact-name: reset
+       artifact-name: cornix_reset
+
+     - board: cornix_left
+       cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+       artifact-name: cornix_left_w_dongle
+
+     - board: nice_nano_v2
+       shield: cornix_zdd_dongle dongle_display
+       snippet: studio-rpc-usb-uart
+       artifact-name: cornix_zdd_dongle
+
+     - board: nice_nano_v2
+       shield: settings_reset
+       artifact-name: cornix_zdd_dongle_reset
    ```
 
 4. Build Firmware

@@ -113,12 +113,12 @@ Current pattern:
 ```yaml
 include:
   - board: nice_nano_v2
-    shield: corne_left
+    shield: corne_left nice_view_adapter nice_view
     snippet: common-config studio-rpc-usb-uart
     artifact-name: corne_left
 
   - board: nice_nano_v2
-    shield: corne_right
+    shield: corne_right nice_view_adapter nice_view
     artifact-name: corne_right
 
   - board: nice_nano_v2
@@ -126,37 +126,45 @@ include:
     artifact-name: corne_reset
 
   - board: nice_nano_v2
-    shield: corne_dongle dongle_display
-    snippet: common-config scanner-advertisement
-    artifact-name: corne_dongle
-
-  - board: nice_nano_v2
-    shield: corne_left_w_dongle
-    cmake-args: -DCONFIG_ZMK_DISPLAY=n -DCONFIG_DISPLAY=n -DCONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM=n
+    shield: corne_left nice_view_adapter nice_view
+    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: corne_left_w_dongle
 
   - board: nice_nano_v2
-    shield: eyelash_corne_left
+    shield: corne_zdd_dongle dongle_display
+    snippet: studio-rpc-usb-uart
+    artifact-name: corne_zdd_dongle
+
+  - board: nice_nano_v2
+    shield: settings_reset
+    artifact-name: corne_zdd_dongle_reset
+
+  - board: eyelash_corne_left
+    shield: nice_view
     snippet: common-config studio-rpc-usb-uart
     artifact-name: eyelash_corne_left
 
-  - board: nice_nano_v2
-    shield: eyelash_corne_right
+  - board: eyelash_corne_right
+    shield: nice_view
     artifact-name: eyelash_corne_right
 
   - board: nice_nano_v2
     shield: settings_reset
     artifact-name: eyelash_corne_reset
 
-  - board: nice_nano_v2
-    shield: eyelash_corne_dongle dongle_display
-    snippet: common-config scanner-advertisement
-    artifact-name: eyelash_corne_dongle
+  - board: eyelash_corne_left
+    shield: nice_view
+    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+    artifact-name: eyelash_corne_left_w_dongle
 
   - board: nice_nano_v2
-    shield: eyelash_corne_left_w_dongle
-    cmake-args: -DCONFIG_ZMK_DISPLAY=n -DCONFIG_DISPLAY=n -DCONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM=n
-    artifact-name: eyelash_corne_left_w_dongle
+    shield: eyelash_corne_zdd_dongle dongle_display
+    snippet: studio-rpc-usb-uart
+    artifact-name: eyelash_corne_zdd_dongle
+
+  - board: nice_nano_v2
+    shield: settings_reset
+    artifact-name: eyelash_corne_zdd_dongle_reset
 ```
 
 ### Flashing
@@ -174,6 +182,6 @@ include:
 - Dedicated `config/corne.keymap` and `config/corne.conf` are committed.
 - Corne build targets are enabled in `build.yaml`:
   - `corne_left`, `corne_right`, `corne_reset`
-  - `corne_dongle`, `corne_left_w_dongle`
+  - `corne_left_w_dongle`, `corne_zdd_dongle`, `corne_zdd_dongle_reset`
   - `eyelash_corne_left`, `eyelash_corne_right`, `eyelash_corne_reset`
-  - `eyelash_corne_dongle`, `eyelash_corne_left_w_dongle`
+  - `eyelash_corne_left_w_dongle`, `eyelash_corne_zdd_dongle`, `eyelash_corne_zdd_dongle_reset`
