@@ -19,6 +19,8 @@
   #define T_LFT LC(LS(TAB))
   #define W_RHT LG(TAB)
   #define W_LFT LG(LS(TAB))
+  #define D_PRV LG(LC(LEFT))
+  #define D_NXT LG(LC(RIGHT))
 #else
 // homerow mods
   #define M_IDX LCTRL
@@ -39,4 +41,10 @@
   #define T_LFT LC(LS(TAB))
   #define W_RHT LA(TAB)
   #define W_LFT LA(LS(TAB))
+  #define D_PRV LG(LC(LEFT))
+  #define D_NXT LG(LC(RIGHT))
 #endif
+// Desktop management shortcuts
+#define PIN_WIN   &kp LG(LC(LS(Q)))       // Pin window across desktops.
+#define PIN_APP   &kp LG(LC(LS(A)))       // Pin application across desktops.
+#define DSK_MGR   &kp LA(GRAVE)           // Desktop manager.
