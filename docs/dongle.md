@@ -125,7 +125,7 @@ Some are planned-only depending on current matrix coverage.
    - `artifact-name: prospector_central`
 5. `zdd` + `scanner` role
    - `board: nice_nano_v2`
-   - `shield: zdd_scanner`
+   - `shield: zdd_scanner dongle_display`
    - `artifact-name: zdd_scanner`
 6. `prospector` + `scanner` role
    - `board: <prospector_board>`
@@ -134,7 +134,7 @@ Some are planned-only depending on current matrix coverage.
 
 ## Current Build Coverage
 
-Current state from `build.yaml` (checked on February 19, 2026):
+Current state from `build.yaml` (checked on February 20, 2026):
 
 - Active dongle-related entries:
   - `totem_zdd_dongle`
@@ -162,8 +162,8 @@ Current state from `build.yaml` (checked on February 19, 2026):
   - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
   - `zdd_central`
-- Not active yet:
   - `zdd_scanner`
+- Not active yet:
   - `prospector_central`, `prospector_scanner`
   - `<keyboard>_prospector_dongle` family targets
 

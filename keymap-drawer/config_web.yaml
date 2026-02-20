@@ -78,7 +78,7 @@ parse_config:
     "&bootloader": Boot
     "&studio_unlock": Studio Unlock
     "&caps_word": Caps Word
-    "&shift_repeat": Repeat
+    "&shift_repeat": Magic
     "&leader": Leader
     "&leader_sft": Shift+Leader
     "&smart_mouse": Smart Mouse
@@ -87,8 +87,8 @@ parse_config:
 
     "&smart_num NUM 0": { tap: NumWord, hold: Num, shifted: Sticky Num }
     "&num_dance": { tap: NumWord, shifted: Sticky Num }
-    "&magic_shift LSHFT 0": { tap: Repeat, hold: Shift, shifted: Caps Word }
-    "&magic_shift": { tap: Repeat, hold: Shift, shifted: Caps Word }
+    "&magic_shift LSHFT 0": { tap: Magic, hold: Shift, shifted: Caps Word }
+    "&magic_shift": { tap: Magic, hold: Shift, shifted: Caps Word }
 
     "&lt_spc NAV 0": { tap: Spc, hold: Nav, shifted: Sentence }
     "&lt_qxl SYM 0": { tap: "?", hold: Sym, shifted: "!" }
