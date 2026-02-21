@@ -68,10 +68,8 @@ This repo uses two dongle hardware families:
 
 Firmware direction in this repo:
 
-- `zdd` hardware uses ZMK Dongle Display firmware family
-- `prospector` hardware uses YADS firmware family (robust alternative track)
-
-Both hardware variants can run any of the roles above, as long as the matching role firmware is flashed.
+- `zdd` hardware uses ZMK Dongle Display firmware family (`central`, `dongle`)
+- `prospector` hardware uses YADS firmware family (`scanner`)
 
 ## Role Switching Rules
 
@@ -94,8 +92,8 @@ This repository uses a fixed naming policy for dongle targets:
 - Shared role targets (`central`, `scanner`):
   - `<hardware>_<role>`
   - Examples:
-    - `zdd_central`, `prospector_central`
-    - `zdd_scanner`, `prospector_scanner`
+    - `zdd_central`
+    - `prospector_central`, `prospector_scanner`
 
 Frozen identifiers:
 
@@ -123,11 +121,7 @@ Some are planned-only depending on current matrix coverage.
    - `board: <prospector_board>`
    - `shield: prospector_central`
    - `artifact-name: prospector_central`
-5. `zdd` + `scanner` role
-   - `board: nice_nano_v2`
-   - `shield: zdd_scanner dongle_display`
-   - `artifact-name: zdd_scanner`
-6. `prospector` + `scanner` role
+5. `prospector` + `scanner` role
    - `board: <prospector_board>`
    - `shield: prospector_scanner`
    - `artifact-name: prospector_scanner`
@@ -162,7 +156,6 @@ Current state from `build.yaml` (checked on February 20, 2026):
   - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
   - `zdd_central`
-  - `zdd_scanner`
 - Not active yet:
   - `prospector_central`, `prospector_scanner`
   - `<keyboard>_prospector_dongle` family targets
@@ -213,6 +206,7 @@ Repository default for `zdd_central` currently sets:
 - Scanner listens for status advertisements from compatible keyboard firmware.
 - Scanner does not replace keyboard-to-host input routing.
 - Scanner display is independent from host BLE stack quality.
+- In this repository, scanner role is Prospector-only.
 
 ### Requirements
 
