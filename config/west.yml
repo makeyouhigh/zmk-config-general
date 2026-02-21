@@ -49,7 +49,6 @@ manifest:
 
     - name: zmk-rgbled-widget
       remote: caksoylar
-      revision: main
 
     - name: zmk-nice-oled
       remote: mctechnology17

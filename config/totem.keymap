@@ -18,7 +18,7 @@
                     LT  RT                                                     \
                     LM  RM                                                     \
         &kp ESC     LB  RB   &kp BSPC                                          \
-        &kp ENTER   LH  RH   &kp SPACE                                         \
+        &kp TAB     LH  RH   &kp DEL                                           \
     )
 
 #include "continuum/matrix/totem.h"

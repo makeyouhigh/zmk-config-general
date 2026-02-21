@@ -1,16 +1,16 @@
 #define CONFIG_WIRELESS
-    
-#define NUMBER_ROW &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0  &none
 
-#define ZMK_BASE_LAYER(name, LT, RT, LM, RM, LB, RB, LH, RH)                                                    \
-    ZMK_LAYER(                                                                                                  \
-        name,                                                                                                   \
-        NUMBER_ROW                                                                                              \
-        &none      LT                                           JS0_BINDING                    RT        &none  \
-        &none      LM                              JS1_BINDING  JS2_BINDING  JS3_BINDING       RM        &none  \
-        &none      LB                  LEC_BINDING(&kp C_MUTE)  JS4_BINDING                    RB        &none  \
-        &none      &kp ESC  &kp ENTER  LH                                    RH     &kp SPACE  &kp BSPC  &none, \
-        SENSOR_VOLUME_BINDING                                                                                   \
+#define NUMBER_ROW &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6  &kp N7  &kp N8  &kp N9  &kp N0  &kp MINUS
+
+#define ZMK_BASE_LAYER(name, LT, RT, LM, RM, LB, RB, LH, RH)                                                      \
+    ZMK_LAYER(                                                                                                    \
+        name,                                                                                                     \
+        NUMBER_ROW                                                                                                \
+        &kp ESC    LT                                           JS0_BINDING                    RT        &kp LBKT \
+        &kp TAB    LM                              JS1_BINDING  JS2_BINDING  JS3_BINDING       RM        &kp RBKT \
+        &kp CAPS   LB                  LEC_BINDING(&kp C_MUTE)  JS4_BINDING                    RB        &kp BSLH \
+        &none      &kp LALT &kp LGUI   LH                                    RH     &kp RET    &kp BSPC  &kp DEL, \
+        SENSOR_VOLUME_BINDING                                                                                     \
     )
 
 #include "continuum/utils/encoders.h"

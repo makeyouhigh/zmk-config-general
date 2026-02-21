@@ -21,19 +21,80 @@ concurrency:
 
 jobs:
   keymap-drawer:
-    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-    with:
-      fail_on_error: true
-      install_branch: "main"
-      keymap_patterns: "config/*.keymap"
-      config_path: "keymap-drawer/config.yaml"
-      json_path: "boards/shields/${keyboard}"
-      output_folder: "keymap-drawer"
-      destination: "artifact"
-      artifact_name: "keymap-drawings"
-      draw_args: "rommana:'--ghost-keys 0 9 26 29'"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install keymap-drawer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install keymap-drawer
+
+      - name: Generate keymap drawings
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p draw-artifacts
+          shopt -s nullglob
+          keymaps=(config/*.keymap)
+          rendered=0
+
+          if [ "${#keymaps[@]}" -eq 0 ]; then
+            echo "No keymap files found in config/."
+            exit 1
+          fi
+
+          for keymap_file in "${keymaps[@]}"; do
+            keyboard="$(basename "${keymap_file}" .keymap)"
+            yaml_out="draw-artifacts/${keyboard}.yaml"
+            svg_out="draw-artifacts/${keyboard}.svg"
+            layout_json=""
+
+            if [ -f "config/${keyboard}.json" ]; then
+              layout_json="config/${keyboard}.json"
+            elif [ -f "boards/shields/${keyboard}/${keyboard}.json" ]; then
+              layout_json="boards/shields/${keyboard}/${keyboard}.json"
+            elif grep -q 'continuum/matrix/34.h' "${keymap_file}" && [ -f "config/delta_omega.json" ]; then
+              # Reuse shared 34-key layout for continuum 34-key wrappers.
+              layout_json="config/delta_omega.json"
+            fi
+
+            keymap -c keymap-drawer/config.yaml parse -z "${keymap_file}" --virtual-layers Combos > "${yaml_out}"
+
+            python -c "import sys, yaml; path=sys.argv[1]; data=yaml.safe_load(open(path, encoding='utf-8')) or {}; [combo.__setitem__('l', ['Combos']) for combo in (data.get('combos') or [])]; yaml.safe_dump(data, open(path, 'w', encoding='utf-8'), sort_keys=False, allow_unicode=True)" "${yaml_out}"
+
+            if [ -n "${layout_json}" ]; then
+              keymap -c keymap-drawer/config.yaml draw -j "${layout_json}" "${yaml_out}" > "${svg_out}"
+            else
+              keymap -c keymap-drawer/config.yaml draw "${yaml_out}" > "${svg_out}"
+            fi
+
+            rendered=$((rendered + 1))
+          done
+
+          if [ "${rendered}" -eq 0 ]; then
+            echo "No keymaps rendered."
+            exit 1
+          fi
+
+          ls -la draw-artifacts
+
+      - name: Upload keymap drawings artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: keymap-drawings
+          path: draw-artifacts
+          if-no-files-found: error
 
   keymap-pr:
     name: Create keymap drawing PR
@@ -54,7 +115,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: keymap-drawings
-          path: .draw-artifacts
+          path: draw-artifacts
 
       - name: Normalize drawing paths
         shell: bash
@@ -68,7 +129,7 @@ jobs:
             kb="$(basename "$keymap" .keymap)"
 
             for ext in svg yaml; do
-              src="$(find .draw-artifacts -type f -name "${kb}.${ext}" | head -n1 || true)"
+              src="$(find draw-artifacts -type f -name "${kb}.${ext}" | head -n1 || true)"
               if [ -n "${src}" ]; then
                 mv "$src" "keymap-drawer/${kb}.${ext}"
                 moved=$((moved + 1))

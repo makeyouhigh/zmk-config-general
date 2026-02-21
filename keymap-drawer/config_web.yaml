@@ -207,12 +207,15 @@ parse_config:
 
     # common keys
     BSPC: Bspc
+    CAPS: Caps
     DEL: Del
     ESC: Esc
+    ENTER: Enter
     RET: Enter
     SPACE: Spc
     TAB: Tab
     INS: Ins
+    INSERT: Ins
     HOME: Home
     END: End
     PG_UP: PgUp

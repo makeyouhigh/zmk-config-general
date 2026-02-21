@@ -3,10 +3,10 @@
 #define ZMK_BASE_LAYER(name, LT, RT, LM, RM, LB, RB, LH, RH)                                  \
     ZMK_LAYER(                                                                                \
         name,                                                                                 \
-        &none       LT                            JS0_BINDING               RT  &none         \
-        &none       LM               JS1_BINDING  JS2_BINDING  JS3_BINDING  RM  &none         \
-        &kp ESC     LB  LEC_BINDING(&kp C_MUTE)   JS4_BINDING               RB  &kp BSPC      \
-        &kp ENTER   LH                                                      RH  &kp SPACE,    \
+        &kp ESC     LT                            JS0_BINDING               RT  &kp LBKT      \
+        &kp TAB     LM               JS1_BINDING  JS2_BINDING  JS3_BINDING  RM  &kp RBKT      \
+        &kp CAPS    LB  LEC_BINDING(&kp C_MUTE)   JS4_BINDING               RB  &kp BSLH      \
+        &kp LALT    LH                                                      RH  &kp DEL,      \
         SENSOR_VOLUME_BINDING                                                                 \
     )
 
