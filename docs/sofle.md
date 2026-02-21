@@ -10,8 +10,8 @@ Implemented matrix targets:
 
 | Target | Board | Shield | Snippet | Artifact Name | Status |
 | --- | --- | --- | --- | --- | --- |
-| Left half | `nice_nano_v2` | `sofle_left` | `common-config studio-rpc-usb-uart` | `sofle_left` | Active |
-| Right half | `nice_nano_v2` | `sofle_right` | none | `sofle_right` | Active |
+| Left half | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | `common-config studio-rpc-usb-uart` | `sofle_left` | Active |
+| Right half | `nice_nano_v2` | `sofle_right nice_view_adapter nice_view` | none | `sofle_right` | Active |
 | Reset | `nice_nano_v2` | `settings_reset` | none | `sofle_reset` | Active |
 | Left half (dongle split) | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | none | `sofle_left_w_dongle` | Active |
 | Dongle (single keyboard) | `nice_nano_v2` | `sofle_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |

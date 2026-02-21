@@ -30,7 +30,7 @@ Planned or external:
 
 - Prospector (YADS) role coverage expansion
 - Advanced power profiling per device class
-- Visual layout rendering pipelines
+- Additional hardware/role integrations beyond the current matrix
 
 Each keyboard listed below is expected to have a corresponding shield definition or be explicitly documented as externally maintained.
 
@@ -161,14 +161,17 @@ Reference:
 - `scanner`: status observer role that listens to keyboard advertisements
 
 Role switching is firmware-based and requires reflashing the dongle, and sometimes matching keyboard firmware.
-Scanner mode also requires keyboard firmware with status advertisement enabled (this repo uses `scanner-advertisement` snippet).
+Scanner mode requires keyboard firmware that advertises status payloads and a matching scanner firmware track.
 
 ### Supported hardware variants
 
 - ZMK Dongle Display (`zdd`) hardware
 - Prospector hardware (used with YADS firmware track in this repo)
 
-Both hardware variants can run the roles above with role-matching firmware.
+Current in-repo matrix coverage:
+
+- Active in `build.yaml`: `zdd` dongle/central targets
+- Planned/external track: Prospector central/scanner targets
 
 ### Supported variants by firmware family
 

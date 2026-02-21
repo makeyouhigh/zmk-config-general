@@ -128,7 +128,7 @@ Some are planned-only depending on current matrix coverage.
 
 ## Current Build Coverage
 
-Current state from `build.yaml` (checked on February 20, 2026):
+Current state from `build.yaml`:
 
 - Active dongle-related entries:
   - `totem_zdd_dongle`
@@ -211,7 +211,7 @@ Repository default for `zdd_central` currently sets:
 ### Requirements
 
 - Keyboard firmware must enable status advertisement.
-  - This repo uses `scanner-advertisement` snippet for that purpose.
+  - Scanner firmware integration is Prospector-track and not built from this repository matrix.
 - Channel settings must match your intended topology.
   - `CONFIG_PROSPECTOR_CHANNEL` on keyboards
   - `CONFIG_PROSPECTOR_SCANNER_CHANNEL` on scanner

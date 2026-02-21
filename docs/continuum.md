@@ -36,7 +36,7 @@ Continuum is primarily inspired by:
 
 - `config/continuum/base.keymap`
   - Shared layer stack and behavior definitions.
-- `config/continuum/helper.h`
+- `config/continuum/utils/helper.h`
   - Macro helpers for behaviors, combos, layers, unicode, and conditional layers.
 - `config/continuum/combos.dtsi`
   - Horizontal and vertical combo definitions.

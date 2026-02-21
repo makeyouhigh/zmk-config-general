@@ -22,31 +22,19 @@ Rule of done for each firmware target:
 
 ### ZMK Dongle Display(`zdd`)
 
-- [ ] implement device single
-  - [ ] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
-  - [ ] eyelash corne variation
-- [ ] develop central
-  - [ ] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
-- [ ] develop scanner
-  - [ ] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
+- [x] implement device single
+  - [x] totem
+  - [x] urchin
+  - [x] sofle
+  - [x] eyelash sofle
+  - [x] cornix
+  - [x] delta omega
+  - [x] corne
+  - [x] eyelash corne variation
+- [x] develop central
+  - [x] shared target: `zdd_central` (single matrix target for all keyboards)
+- [x] scanner track removed from `zdd`
+  - [x] scanner role is Prospector-only scope
 
 ### Prospector hardware(`prospector`) + YADS firmware
 

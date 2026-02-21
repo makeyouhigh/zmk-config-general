@@ -36,6 +36,9 @@ Use this layering to avoid split-side regressions and warning-only misconfigurat
 4. Shared snippet config (`snippets/common-config/common-config.conf`):
    - Keep this hardware-agnostic.
    - Do not force hardware-specific options globally (for example global `CONFIG_SPI=y`).
+5. Shared config references:
+   - `snippets/common-config/extra-config.conf` is a commented copy/paste reference.
+   - Keep it as reference-only; do not wire it as a global snippet input.
 
 Guardrails:
 

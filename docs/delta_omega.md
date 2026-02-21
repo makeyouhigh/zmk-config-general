@@ -57,7 +57,7 @@ Implemented paths in this repo:
 Planned/legacy references kept for continuity:
 
 - `modules/keyboards/delta-omega/boards/shields/delta_omega/` (upstream historical reference)
-- `boards/shields/delta_omega_variants/` (planned variants path)
+- Variant-specific shield split is not present in this repo today; new variants should be added under `boards/shields/delta_omega/`.
 
 ## How to Use
 
