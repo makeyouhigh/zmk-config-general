@@ -31,8 +31,8 @@ Rule of done for each firmware target:
   - [x] delta omega
   - [x] corne
   - [x] eyelash corne variation
-- [x] develop central
-  - [x] shared target: `zdd_central` (single matrix target for all keyboards)
+- [x] drop central target
+  - [x] removed shared target: `zdd_central`
 - [x] scanner track removed from `zdd`
   - [x] scanner role is Prospector-only scope
 

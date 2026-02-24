@@ -68,8 +68,8 @@ This repo uses two dongle hardware families:
 
 Firmware direction in this repo:
 
-- `zdd` hardware uses ZMK Dongle Display firmware family (`central`, `dongle`)
-- `prospector` hardware uses YADS firmware family (`scanner`)
+- `zdd` hardware uses ZMK Dongle Display firmware family (`dongle`)
+- `prospector` hardware uses YADS firmware family (`central`, `scanner`)
 
 ## Role Switching Rules
 
@@ -92,7 +92,6 @@ This repository uses a fixed naming policy for dongle targets:
 - Shared role targets (`central`, `scanner`):
   - `<hardware>_<role>`
   - Examples:
-    - `zdd_central`
     - `prospector_central`, `prospector_scanner`
 
 Frozen identifiers:
@@ -113,15 +112,11 @@ Some are planned-only depending on current matrix coverage.
    - `board: <prospector_board>`
    - `shield: totem_prospector_dongle`
    - `artifact-name: totem_prospector_dongle`
-3. `zdd` + `central` role
-   - `board: nice_nano_v2`
-   - `shield: zdd_central dongle_display`
-   - `artifact-name: zdd_central`
-4. `prospector` + `central` role
+3. `prospector` + `central` role
    - `board: <prospector_board>`
    - `shield: prospector_central`
    - `artifact-name: prospector_central`
-5. `prospector` + `scanner` role
+4. `prospector` + `scanner` role
    - `board: <prospector_board>`
    - `shield: prospector_scanner`
    - `artifact-name: prospector_scanner`
@@ -155,7 +150,6 @@ Current state from `build.yaml`:
   - `cornix_zdd_dongle`
   - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `zdd_central`
 - Not active yet:
   - `prospector_central`, `prospector_scanner`
   - `<keyboard>_prospector_dongle` family targets
@@ -180,9 +174,7 @@ This is a swap model, not a multi-input model.
 
 If there are `N` split keyboards, plan for up to `2N` bonded peripherals.
 
-Repository default for `zdd_central` currently sets:
-
-- `CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=6`
+There is no active shared `central` target in the current build matrix.
 
 ### Pairing Procedure (Recommended)
 
