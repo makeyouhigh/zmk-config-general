@@ -14,7 +14,7 @@ Implemented matrix targets:
 | Right half | `nice_nano_v2` | `sofle_right nice_view_adapter nice_view` | none | `sofle_right` | Active |
 | Reset | `nice_nano_v2` | `settings_reset` | none | `sofle_reset` | Active |
 | Left half (dongle split) | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | none | `sofle_left_w_dongle` | Active |
-| Dongle (single keyboard) | `nice_nano_v2` | `sofle_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
+| Dongle (single keyboard) | `nice_nano_v2` | `sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
 | Dongle reset | `nice_nano_v2` | `settings_reset` | none | `sofle_zdd_dongle_reset` | Active |
 
 Related implemented targets for Eyelash Sofle:
@@ -25,7 +25,7 @@ Related implemented targets for Eyelash Sofle:
 | Right half | `eyelash_sofle_right` | `nice_view` | none | `eyelash_sofle_right` | Active |
 | Reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_reset` | Active |
 | Left half (dongle split) | `eyelash_sofle_left` | `nice_view` | none | `eyelash_sofle_left_w_dongle` | Active |
-| Dongle (single keyboard) | `nice_nano_v2` | `eyelash_sofle_zdd_dongle dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
+| Dongle (single keyboard) | `nice_nano_v2` | `eyelash_sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
 | Dongle reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_zdd_dongle_reset` | Active |
 
 ## Reference Material

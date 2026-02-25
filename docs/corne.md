@@ -131,7 +131,7 @@ include:
     artifact-name: corne_left_w_dongle
 
   - board: nice_nano_v2
-    shield: corne_zdd_dongle dongle_display
+    shield: corne_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
     artifact-name: corne_zdd_dongle
 
@@ -158,7 +158,7 @@ include:
     artifact-name: eyelash_corne_left_w_dongle
 
   - board: nice_nano_v2
-    shield: eyelash_corne_zdd_dongle dongle_display
+    shield: eyelash_corne_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
     artifact-name: eyelash_corne_zdd_dongle
 

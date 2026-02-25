@@ -28,18 +28,17 @@ include:
     shield: totem_right
     artifact-name: totem_right
   - board: seeeduino_xiao_ble
-    shield: settings_reset
-    artifact-name: totem_reset
-  - board: seeeduino_xiao_ble
     shield: totem_left_w_dongle
     artifact-name: totem_left_w_dongle
   - board: nice_nano_v2
+    shield: totem_dongle
+    snippet: studio-rpc-usb-uart
+    artifact-name: totem_dongle
+  - board: nice_nano_v2
     shield: totem_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=totem_zdd
     artifact-name: totem_zdd_dongle
-  - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: totem_zdd_dongle_reset
 
   # Urchin
   - board: nice_nano_v2
@@ -50,18 +49,17 @@ include:
     shield: urchin_right nice_view_adapter nice_view_gem
     artifact-name: urchin_right
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: urchin_reset
-  - board: nice_nano_v2
     shield: urchin_left_w_dongle nice_view_adapter nice_view_gem
     artifact-name: urchin_left_w_dongle
   - board: nice_nano_v2
-    shield: urchin_zdd_dongle dongle_display
+    shield: urchin_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: urchin_zdd_dongle
+    artifact-name: urchin_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: urchin_zdd_dongle_reset
+    shield: urchin_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=urchin_zdd
+    artifact-name: urchin_zdd_dongle
 
   # Corne
   - board: nice_nano_v2
@@ -72,19 +70,18 @@ include:
     shield: corne_right nice_view_adapter nice_view
     artifact-name: corne_right
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: corne_reset
-  - board: nice_nano_v2
     shield: corne_left nice_view_adapter nice_view
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: corne_left_w_dongle
   - board: nice_nano_v2
-    shield: corne_zdd_dongle dongle_display
+    shield: corne_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: corne_zdd_dongle
+    artifact-name: corne_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: corne_zdd_dongle_reset
+    shield: corne_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=corne_zdd
+    artifact-name: corne_zdd_dongle
 
   # Eyelash Corne
   - board: eyelash_corne_left
@@ -94,20 +91,19 @@ include:
   - board: eyelash_corne_right
     shield: nice_view
     artifact-name: eyelash_corne_right
-  - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: eyelash_corne_reset
   - board: eyelash_corne_left
     shield: nice_view
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: eyelash_corne_left_w_dongle
   - board: nice_nano_v2
-    shield: eyelash_corne_zdd_dongle dongle_display
+    shield: eyelash_corne_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: eyelash_corne_zdd_dongle
+    artifact-name: eyelash_corne_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: eyelash_corne_zdd_dongle_reset
+    shield: eyelash_corne_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=eyelash_corne_zdd
+    artifact-name: eyelash_corne_zdd_dongle
 
   # Sofle
   - board: nice_nano_v2
@@ -118,19 +114,18 @@ include:
     shield: sofle_right nice_view_adapter nice_view
     artifact-name: sofle_right
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: sofle_reset
-  - board: nice_nano_v2
     shield: sofle_left nice_view_adapter nice_view
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: sofle_left_w_dongle
   - board: nice_nano_v2
-    shield: sofle_zdd_dongle dongle_display
+    shield: sofle_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: sofle_zdd_dongle
+    artifact-name: sofle_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: sofle_zdd_dongle_reset
+    shield: sofle_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=sofle_zdd
+    artifact-name: sofle_zdd_dongle
 
   # Eyelash Sofle
   - board: eyelash_sofle_left
@@ -140,20 +135,19 @@ include:
   - board: eyelash_sofle_right
     shield: nice_view
     artifact-name: eyelash_sofle_right
-  - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: eyelash_sofle_reset
   - board: eyelash_sofle_left
     shield: nice_view
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: eyelash_sofle_left_w_dongle
   - board: nice_nano_v2
-    shield: eyelash_sofle_zdd_dongle dongle_display
+    shield: eyelash_sofle_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: eyelash_sofle_zdd_dongle
+    artifact-name: eyelash_sofle_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: eyelash_sofle_zdd_dongle_reset
+    shield: eyelash_sofle_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=eyelash_sofle_zdd
+    artifact-name: eyelash_sofle_zdd_dongle
 
   # Delta Omega
   - board: seeeduino_xiao_ble
@@ -164,18 +158,17 @@ include:
     shield: delta_omega_right
     artifact-name: delta_omega_right
   - board: seeeduino_xiao_ble
-    shield: settings_reset
-    artifact-name: delta_omega_reset
-  - board: seeeduino_xiao_ble
     shield: delta_omega_left_w_dongle
     artifact-name: delta_omega_left_w_dongle
   - board: nice_nano_v2
-    shield: delta_omega_zdd_dongle dongle_display
+    shield: delta_omega_dongle
     snippet: studio-rpc-usb-uart
-    artifact-name: delta_omega_zdd_dongle
+    artifact-name: delta_omega_dongle
   - board: nice_nano_v2
-    shield: settings_reset
-    artifact-name: delta_omega_zdd_dongle_reset
+    shield: delta_omega_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=delta_omega_zdd
+    artifact-name: delta_omega_zdd_dongle
 
   # Cornix
   - board: cornix_left
@@ -185,16 +178,23 @@ include:
   - board: cornix_right
     # shield: cornix_indicator
     artifact-name: cornix_right
-  - board: cornix_right
-    shield: settings_reset
-    artifact-name: cornix_reset
   - board: cornix_left
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
     artifact-name: cornix_left_w_dongle
   - board: nice_nano_v2
-    shield: cornix_zdd_dongle dongle_display
+    shield: cornix_dongle
     snippet: studio-rpc-usb-uart
+    artifact-name: cornix_dongle
+  - board: nice_nano_v2
+    shield: cornix_dongle zdd_adapter dongle_display
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=cornix_zdd
     artifact-name: cornix_zdd_dongle
+
+  # Shared reset artifacts
   - board: nice_nano_v2
     shield: settings_reset
-    artifact-name: cornix_zdd_dongle_reset
+    artifact-name: reset_nice_nano_v2
+  - board: seeeduino_xiao_ble
+    shield: settings_reset
+    artifact-name: reset_seeeduino_xiao_ble
