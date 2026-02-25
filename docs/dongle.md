@@ -69,7 +69,7 @@ This repo uses two dongle hardware families:
 Firmware direction in this repo:
 
 - `zdd` hardware uses ZMK Dongle Display firmware family (`dongle`)
-- `prospector` hardware uses YADS firmware family (`central`, `scanner`)
+- `prospector` hardware uses YADS firmware family (`dongle`, `central`, `scanner`)
 
 ## Role Switching Rules
 
@@ -106,18 +106,18 @@ Some are planned-only depending on current matrix coverage.
 
 1. `zdd` + `dongle` role (single keyboard)
    - `board: nice_nano_v2`
-   - `shield: totem_zdd_dongle`
+   - `shield: totem_dongle zdd_adapter dongle_display`
    - `artifact-name: totem_zdd_dongle`
 2. `prospector` + `dongle` role (single keyboard)
-   - `board: <prospector_board>`
+   - `board: seeeduino_xiao_ble`
    - `shield: totem_prospector_dongle`
    - `artifact-name: totem_prospector_dongle`
 3. `prospector` + `central` role
-   - `board: <prospector_board>`
+   - `board: seeeduino_xiao_ble`
    - `shield: prospector_central`
    - `artifact-name: prospector_central`
 4. `prospector` + `scanner` role
-   - `board: <prospector_board>`
+   - `board: seeeduino_xiao_ble`
    - `shield: prospector_scanner`
    - `artifact-name: prospector_scanner`
 
@@ -151,8 +151,9 @@ Current state from `build.yaml`:
   - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
   - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
 - Not active yet:
+  - `totem_prospector_dongle`, `totem_prospector_dongle_reset`
   - `prospector_central`, `prospector_scanner`
-  - `<keyboard>_prospector_dongle` family targets
+  - Additional `<keyboard>_prospector_dongle` family targets
 
 ## `central` Role: Multi-Keyboard Model
 

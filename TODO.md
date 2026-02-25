@@ -39,7 +39,7 @@ Rule of done for each firmware target:
 ### Prospector hardware(`prospector`) + YADS firmware
 
 - [ ] implement device single
-  - [ ] totem
+  - [x] totem
   - [ ] urchin
   - [ ] sofle
   - [ ] eyelash sofle

@@ -9,7 +9,6 @@
     chosen {
         zmk,kscan = &mock_kscan;
         zmk,physical-layout = &totem_layout;
-        zephyr,display = &oled;
     };
 
     mock_kscan: kscan_1 {
@@ -33,24 +32,5 @@
         RC(3,0) RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4)    RC(2,5) RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(3,9)
                                 RC(3,2) RC(3,3) RC(3,4)    RC(3,5) RC(3,6) RC(3,7)
         >;
-    };
-};
-
-&pro_micro_i2c {
-    status = "okay";
-    compatible = "nordic,nrf-twi";
-    oled: sh1106@3c {
-        compatible = "sinowealth,sh1106";
-        reg = <0x3c>;
-        width = <128>;
-        height = <64>;
-        segment-offset = <2>;
-        page-offset = <0>;
-        display-offset = <0>;
-        multiplex-ratio = <63>;
-        segment-remap;
-        com-invdir;
-        inversion-on;
-        prechargep = <0x22>;
     };
 };

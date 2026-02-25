@@ -14,14 +14,14 @@ TOTEM is a 38-key column-staggered split keyboard. This repository supports both
 
 Implemented matrix targets:
 
-| Target                    | Board                | Shield                            | Snippet                             | Artifact Name            | Status |
-| ------------------------- | -------------------- | --------------------------------- | ----------------------------------- | ------------------------ | ------ |
-| Left half (direct split)  | `seeeduino_xiao_ble` | `totem_left`                      | `common-config studio-rpc-usb-uart` | `totem_left`             | Active |
-| Right half                | `seeeduino_xiao_ble` | `totem_right`                     | none                                | `totem_right`            | Active |
-| Left half (dongle split)  | `seeeduino_xiao_ble` | `totem_left_w_dongle`             | none                                | `totem_left_w_dongle`    | Active |
-| Dongle (single keyboard)  | `nice_nano_v2`       | `totem_zdd_dongle dongle_display` | `studio-rpc-usb-uart`               | `totem_zdd_dongle`       | Active |
-| Keyboard reset            | `seeeduino_xiao_ble` | `settings_reset`                  | none                                | `totem_reset`            | Active |
-| Dongle reset              | `nice_nano_v2`       | `settings_reset`                  | none                                | `totem_zdd_dongle_reset` | Active |
+| Target                   | Board                | Shield                                    | Snippet                             | Artifact Name            | Status |
+| ------------------------ | -------------------- | ----------------------------------------- | ----------------------------------- | ------------------------ | ------ |
+| Left half (direct split) | `seeeduino_xiao_ble` | `totem_left`                              | `common-config studio-rpc-usb-uart` | `totem_left`             | Active |
+| Right half               | `seeeduino_xiao_ble` | `totem_right`                             | none                                | `totem_right`            | Active |
+| Left half (dongle split) | `seeeduino_xiao_ble` | `totem_left_w_dongle`                     | none                                | `totem_left_w_dongle`    | Active |
+| Dongle (ZDD)             | `nice_nano_v2`       | `totem_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart`               | `totem_zdd_dongle`       | Active |
+| Keyboard reset           | `seeeduino_xiao_ble` | `settings_reset`                          | none                                | `totem_reset`            | Active |
+| Dongle reset (ZDD)       | `nice_nano_v2`       | `settings_reset`                          | none                                | `totem_zdd_dongle_reset` | Active |
 
 ## Reference Material
 
@@ -138,14 +138,14 @@ Dongle split (`totem_zdd_dongle` + `totem_left_w_dongle` + `totem_right`), clean
 
 Artifact-to-device mapping:
 
-| Artifact                     | Flash To                                      |
-| ---------------------------- | --------------------------------------------- |
-| `totem_left.uf2`             | Left half (direct split)                      |
-| `totem_left_w_dongle.uf2`    | Left half (dongle split)                      |
-| `totem_right.uf2`            | Right half                                    |
-| `totem_zdd_dongle.uf2`       | Dongle                                        |
-| `totem_reset.uf2`            | Keyboard half for clearing settings/bonds     |
-| `totem_zdd_dongle_reset.uf2` | Dongle for clearing settings/bonds            |
+| Artifact                     | Flash To                                  |
+| ---------------------------- | ----------------------------------------- |
+| `totem_left.uf2`             | Left half (direct split)                  |
+| `totem_left_w_dongle.uf2`    | Left half (dongle split)                  |
+| `totem_right.uf2`            | Right half                                |
+| `totem_zdd_dongle.uf2`       | Dongle                                    |
+| `totem_reset.uf2`            | Keyboard half for clearing settings/bonds |
+| `totem_zdd_dongle_reset.uf2` | Dongle for clearing settings/bonds        |
 
 ## Configuration
 
