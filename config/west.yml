@@ -11,9 +11,12 @@ manifest:
 
     - name: englmaxi
       url-base: https://github.com/englmaxi
-
+    - name: carrefinho
+      url-base: https://github.com/carrefinho
     - name: janpfischer
       url-base: https://github.com/janpfischer
+    - name: togura
+      url-base: https://github.com/t-ogura
 
     - name: caksoylar
       url-base: https://github.com/caksoylar
@@ -27,7 +30,7 @@ manifest:
       remote: zmkfirmware
       import: app/west.yml
 
-    # Urob's ZMK modules
+    ## Urob's ZMK modules
     - name: zmk-adaptive-key
       path: modules/zmk/adaptive-key
       remote: urob
@@ -49,6 +52,22 @@ manifest:
 
     - name: zmk-dongle-display
       remote: englmaxi
+
+    - name: prospector-zmk-module
+      remote: carrefinho
+      revision: main
+    # - name: prospector-zmk-module
+    #   remote: carrefinho
+    #   revision: feat/new-status-screens
+    # - name: prospector-zmk-module
+    #   remote: togura
+    #   revision: v2.0.0
+    #   path: modules/prospector-zmk-module
+    # - name: prospector-scanner
+    #   remote: togura
+    #   repo-path: prospector-zmk-module
+    #   revision: v2.0.0
+    #   path: modules/prospector-scanner
 
     - name: zmk-dongle-screen
       remote: janpfischer

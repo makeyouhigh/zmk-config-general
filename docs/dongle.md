@@ -10,11 +10,8 @@ This document is the repository-specific technical guide for dongle operation.
 
 ## Dongle Roles
 
-This repository defines three dongle roles:
+This repository defines two dongle roles:
 
-- `central`
-  - One dongle acts as BLE central for multiple split keyboards that are pre-bonded.
-  - Only one keyboard set should be active at a time.
 - `dongle`
   - One dongle is dedicated to a single keyboard.
   - Intended for single-keyboard daily use with a fixed pairing set.
@@ -41,16 +38,6 @@ These diagrams are conceptual and describe firmware role topology only.
                                    [Host]
 ```
 
-### `central` role (multi-keyboard central)
-
-```text
-[Keyboard Set A: L/R] --\
-[Keyboard Set B: L/R] ----> [Dongle (role=central)] ----> [Host]
-[Keyboard Set C: L/R] --/             ^
-                                      |
-                          Only one keyboard set active at a time
-```
-
 ### `scanner` role (status observer)
 
 ```text
@@ -69,7 +56,7 @@ This repo uses two dongle hardware families:
 Firmware direction in this repo:
 
 - `zdd` hardware uses ZMK Dongle Display firmware family (`dongle`)
-- `prospector` hardware uses YADS firmware family (`dongle`, `central`, `scanner`)
+- `prospector` hardware uses YADS firmware family (`dongle`, `scanner`)
 
 ## Role Switching Rules
 
@@ -89,15 +76,15 @@ This repository uses a fixed naming policy for dongle targets:
   - Examples:
     - `totem_zdd_dongle`
     - `totem_prospector_dongle`
-- Shared role targets (`central`, `scanner`):
+- Shared role targets (`scanner`):
   - `<hardware>_<role>`
   - Examples:
-    - `prospector_central`, `prospector_scanner`
+    - `prospector_scanner`
 
 Frozen identifiers:
 
 - Hardware IDs: `zdd`, `prospector`
-- Role IDs: `dongle`, `central`, `scanner`
+- Role IDs: `dongle`, `scanner`
 
 ## Concrete Build Examples
 
@@ -110,13 +97,9 @@ Some are planned-only depending on current matrix coverage.
    - `artifact-name: totem_zdd_dongle`
 2. `prospector` + `dongle` role (single keyboard)
    - `board: seeeduino_xiao_ble`
-   - `shield: totem_prospector_dongle`
+   - `shield: totem_dongle prospector_adapter`
    - `artifact-name: totem_prospector_dongle`
-3. `prospector` + `central` role
-   - `board: seeeduino_xiao_ble`
-   - `shield: prospector_central`
-   - `artifact-name: prospector_central`
-4. `prospector` + `scanner` role
+3. `prospector` + `scanner` role
    - `board: seeeduino_xiao_ble`
    - `shield: prospector_scanner`
    - `artifact-name: prospector_scanner`
@@ -126,71 +109,11 @@ Some are planned-only depending on current matrix coverage.
 Current state from `build.yaml`:
 
 - Active dongle-related entries:
-  - `totem_zdd_dongle`
-  - `totem_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `totem_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `urchin_zdd_dongle`
-  - `urchin_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `urchin_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `delta_omega_zdd_dongle`
-  - `delta_omega_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `delta_omega_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `corne_zdd_dongle`
-  - `corne_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `corne_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `eyelash_corne_zdd_dongle`
-  - `eyelash_corne_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `eyelash_corne_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `sofle_zdd_dongle`
-  - `sofle_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `sofle_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `eyelash_sofle_zdd_dongle`
-  - `eyelash_sofle_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `eyelash_sofle_zdd_dongle_reset` (settings reset target for that hardware class)
-  - `cornix_zdd_dongle`
-  - `cornix_left_w_dongle` (keyboard-side peripheral build for dongle topology)
-  - `cornix_zdd_dongle_reset` (settings reset target for that hardware class)
+  - Split and dongle targets for Totem, Urchin, Corne, Eyelash Corne, Sofle, Eyelash Sofle, Delta Omega, and Cornix.
+  - Shared reset targets: `reset_nice_nano_v2`, `reset_seeeduino_xiao_ble`.
 - Not active yet:
-  - `totem_prospector_dongle`, `totem_prospector_dongle_reset`
-  - `prospector_central`, `prospector_scanner`
+  - `prospector_scanner`
   - Additional `<keyboard>_prospector_dongle` family targets
-
-## `central` Role: Multi-Keyboard Model
-
-### Concept
-
-- One dongle is the BLE central.
-- Multiple split keyboard sets are pre-bonded to that dongle.
-- Each split keyboard typically contributes two peripherals (left and right).
-- At runtime, use one keyboard set at a time.
-
-This is a swap model, not a multi-input model.
-
-### Capacity and Constraints
-
-- Never power more than one keyboard set at the same time.
-- Power off the current keyboard before powering on the next keyboard.
-- Each keyboard set must be bonded once.
-- Bond storage must fit the total peripheral count.
-
-If there are `N` split keyboards, plan for up to `2N` bonded peripherals.
-
-There is no active shared `central` target in the current build matrix.
-
-### Pairing Procedure (Recommended)
-
-1. Flash dongle firmware for `central` role.
-2. Flash keyboard firmware compatible with that role.
-3. Clear BLE bonds on dongle and keyboards before first pairing.
-4. Power on keyboard A and complete bonding.
-5. Power off keyboard A.
-6. Repeat for keyboard B, C, and others.
-
-### Daily Use
-
-1. Power off the currently active keyboard.
-2. Power on the keyboard you want to use.
-3. The dongle reconnects using stored bonds.
 
 ## `scanner` Role: Status Observer Model
 
@@ -223,13 +146,6 @@ I still think the advantage of dongles is often overrated.
 
 In this repo, dongle mode is mostly a role-based workaround, not a universal upgrade.
 
-### `central` role
-
-- Useful when you rotate multiple split keyboards and want one pre-bonded central point.
-- Compared to wired, latency is not better because the path adds an extra BLE hop.
-- Reliability does not increase in absolute terms. Failure mode shifts to dongle dependency.
-- Operational burden is real: strict one-keyboard-at-a-time power policy and larger bond management (`2N` split peripherals for `N` keyboards).
-
 ### `dongle` role
 
 - Practical for a single keyboard setup when host BLE behavior is inconsistent.
@@ -244,7 +160,7 @@ In this repo, dongle mode is mostly a role-based workaround, not a universal upg
 
 ### Bottom line
 
-Most dongle benefits are comparative against weak host BLE stacks, not fundamental transport improvements over wired. For this repo, dongle is best treated as a targeted tool per role: `central` for multi-keyboard orchestration, `dongle` for single-keyboard stability, and `scanner` for UI/status observability.
+Most dongle benefits are comparative against weak host BLE stacks, not fundamental transport improvements over wired. For this repo, dongle is best treated as a targeted tool per role: `dongle` for single-keyboard stability and `scanner` for UI/status observability.
 
 ## Related References
 

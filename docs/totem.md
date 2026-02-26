@@ -68,7 +68,7 @@ The shield-level keymap under `boards/shields/totem/` is treated as a factory fa
 ## Operational Constraints
 
 - BLE role and split topology are compile-time decisions.
-- In dongle topology, `totem_zdd_dongle` is the split BLE central and both keyboard halves are peripherals.
+- In dongle topology, `totem_zdd_dongle` is the split BLE hub endpoint and both keyboard halves are peripherals.
 - When used with a dongle topology, direct host pairing for keyboard halves is not used.
 - Switching topology requires reflashing and rebonding.
 - `CONFIG_ZMK_BLE_CLEAR_BONDS_ON_START` is disabled in shared config, so stale bonds persist until explicit reset/clear.

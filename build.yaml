@@ -37,8 +37,13 @@ include:
   - board: nice_nano_v2
     shield: totem_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=totem_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"TOTEM\ ZDD\"
     artifact-name: totem_zdd_dongle
+  - board: seeeduino_xiao_ble
+    shield: totem_dongle prospector_adapter
+    snippet: studio-rpc-usb-uart prospector_extension
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"TOTEM\ PRSP\"
+    artifact-name: totem_prospector_dongle
 
   # Urchin
   - board: nice_nano_v2
@@ -58,7 +63,7 @@ include:
   - board: nice_nano_v2
     shield: urchin_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=urchin_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Urchin\ ZDD\"
     artifact-name: urchin_zdd_dongle
 
   # Corne
@@ -80,7 +85,7 @@ include:
   - board: nice_nano_v2
     shield: corne_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=corne_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Corne\ ZDD\"
     artifact-name: corne_zdd_dongle
 
   # Eyelash Corne
@@ -102,7 +107,7 @@ include:
   - board: nice_nano_v2
     shield: eyelash_corne_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=eyelash_corne_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"EyelashCorneZDD\"
     artifact-name: eyelash_corne_zdd_dongle
 
   # Sofle
@@ -124,7 +129,7 @@ include:
   - board: nice_nano_v2
     shield: sofle_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=sofle_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Sofle\ ZDD\"
     artifact-name: sofle_zdd_dongle
 
   # Eyelash Sofle
@@ -146,7 +151,7 @@ include:
   - board: nice_nano_v2
     shield: eyelash_sofle_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=eyelash_sofle_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"EyelashSofleZDD\"
     artifact-name: eyelash_sofle_zdd_dongle
 
   # Delta Omega
@@ -167,7 +172,7 @@ include:
   - board: nice_nano_v2
     shield: delta_omega_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=delta_omega_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Delta\ Omega\ ZDD\"
     artifact-name: delta_omega_zdd_dongle
 
   # Cornix
@@ -188,7 +193,7 @@ include:
   - board: nice_nano_v2
     shield: cornix_dongle zdd_adapter dongle_display
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=cornix_zdd
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Cornix\ ZDD\"
     artifact-name: cornix_zdd_dongle
 
   # Shared reset artifacts

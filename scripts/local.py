@@ -363,8 +363,10 @@ def main() -> int:
     # if zephyr/module.yml exists in repo, build from isolated base_dir and load repo as extra module.
     if (REPO_ROOT / "zephyr" / "module.yml").exists():
         config_dir = ensure_config_copy(src_config_path, base_dir, src_config_path.name)
-        # Stage the extra module into container-local /tmp to avoid host-mounted FS race issues.
-        extra_modules_dir: Path | None = stage_extra_modules_from_git(REPO_ROOT, Path("/tmp"))
+        # Use a repo-local staging path so local runs also work on Windows hosts.
+        extra_modules_dir: Path | None = stage_extra_modules_from_git(
+            REPO_ROOT, REPO_ROOT / ".build" / "local" / "tmp"
+        )
     else:
         base_dir = REPO_ROOT
         config_dir = src_config_path

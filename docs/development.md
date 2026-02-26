@@ -27,7 +27,7 @@ Use this layering to avoid split-side regressions and warning-only misconfigurat
 
 1. Board/shield role defaults:
    - Put side-specific role and transport defaults in board/shield defconfig files (`Kconfig.defconfig`, `*_defconfig`).
-   - Examples: `CONFIG_ZMK_USB`, `CONFIG_ZMK_BLE`, split role central flags.
+   - Examples: `CONFIG_ZMK_USB`, `CONFIG_ZMK_BLE`, split role flags.
 2. Side overlay/conf overrides:
    - Keep side-only overrides in side-specific files (`*_left.conf`, `*_right.conf`) only when needed.
 3. User config (`config/*.conf`):

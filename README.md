@@ -72,7 +72,7 @@ graph TD
 ```
 
 > [!WARNING]
-> BLE topology is fixed by firmware role selection. A device cannot act as BLE central and peripheral simultaneously. When built for dongle-based operation, direct host BLE pairing is disabled. Switching back to host-direct BLE requires reflashing and rebonding. USB does not arbitrate or override BLE roles. Transport selection, pairing state, and role assignment are compile-time and boot-time decisions.
+> BLE topology is fixed by firmware role selection. A device cannot take both sides of a BLE split link simultaneously. When built for dongle-based operation, direct host BLE pairing is disabled. Switching back to host-direct BLE requires reflashing and rebonding. USB does not arbitrate or override BLE roles. Transport selection, pairing state, and role assignment are compile-time and boot-time decisions.
 
 ### Software Anatomy
 
@@ -156,7 +156,6 @@ Reference:
 
 ### Roles
 
-- `central`: one dongle as BLE central for multiple pre-bonded split keyboards
 - `dongle`: one dongle dedicated to a single keyboard
 - `scanner`: status observer role that listens to keyboard advertisements
 
@@ -171,7 +170,7 @@ Scanner mode requires keyboard firmware that advertises status payloads and a ma
 Current in-repo matrix coverage:
 
 - Active in `build.yaml`: `zdd` dongle targets
-- Planned/external track: Prospector central/scanner targets
+- Planned/external track: Prospector scanner targets
 
 ### Supported variants by firmware family
 
