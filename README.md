@@ -170,6 +170,7 @@ Scanner mode requires keyboard firmware that advertises status payloads and a ma
 Current in-repo matrix coverage:
 
 - Active in `build.yaml`: `zdd` dongle targets
+- Active in `build.yaml`: keyboard-specific Prospector dongle targets (`*_prospector_dongle`)
 - Planned/external track: Prospector scanner targets
 
 ### Supported variants by firmware family

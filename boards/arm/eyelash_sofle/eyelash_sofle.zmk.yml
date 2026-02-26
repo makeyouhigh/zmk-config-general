@@ -7,6 +7,9 @@ arch: arm
 features:
   - keys
   - display
+  - underglow
+  - encoder
+  - studio
 outputs:
   - usb
   - ble

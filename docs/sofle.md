@@ -12,10 +12,9 @@ Implemented matrix targets:
 | --- | --- | --- | --- | --- | --- |
 | Left half | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | `common-config studio-rpc-usb-uart` | `sofle_left` | Active |
 | Right half | `nice_nano_v2` | `sofle_right nice_view_adapter nice_view` | none | `sofle_right` | Active |
-| Reset | `nice_nano_v2` | `settings_reset` | none | `sofle_reset` | Active |
 | Left half (dongle split) | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | none | `sofle_left_w_dongle` | Active |
-| Dongle (single keyboard) | `nice_nano_v2` | `sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
-| Dongle reset | `nice_nano_v2` | `settings_reset` | none | `sofle_zdd_dongle_reset` | Active |
+| Dongle (ZDD) | `nice_nano_v2` | `sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
+| Dongle (Prospector) | `seeeduino_xiao_ble` | `sofle_dongle prospector_adapter` | `studio-rpc-usb-uart prospector_extension` | `sofle_prospector_dongle` | Active |
 
 Related implemented targets for Eyelash Sofle:
 
@@ -23,10 +22,11 @@ Related implemented targets for Eyelash Sofle:
 | --- | --- | --- | --- | --- | --- |
 | Left half | `eyelash_sofle_left` | `nice_view` | `common-config studio-rpc-usb-uart` | `eyelash_sofle_left` | Active |
 | Right half | `eyelash_sofle_right` | `nice_view` | none | `eyelash_sofle_right` | Active |
-| Reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_reset` | Active |
 | Left half (dongle split) | `eyelash_sofle_left` | `nice_view` | none | `eyelash_sofle_left_w_dongle` | Active |
-| Dongle (single keyboard) | `nice_nano_v2` | `eyelash_sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
-| Dongle reset | `nice_nano_v2` | `settings_reset` | none | `eyelash_sofle_zdd_dongle_reset` | Active |
+| Dongle (ZDD) | `nice_nano_v2` | `eyelash_sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
+| Dongle (Prospector) | `seeeduino_xiao_ble` | `eyelash_sofle_dongle prospector_adapter` | `studio-rpc-usb-uart prospector_extension` | `eyelash_sofle_prospector_dongle` | Active |
+
+Shared reset artifacts remain available at repo level: `reset_nice_nano_v2`, `reset_seeeduino_xiao_ble`.
 
 ## Reference Material
 
@@ -72,12 +72,8 @@ Related implemented paths for Eyelash Sofle:
 - `boards/arm/eyelash_sofle/`
 - `config/eyelash_sofle.conf`
 - `config/eyelash_sofle.keymap`
+- `config/eyelash_sofle.json`
 - `boards/shields/eyelash_sofle/`
-
-Dongle-specific config overrides:
-
-- `config/sofle_zdd_dongle.conf`
-- `config/eyelash_sofle_zdd_dongle.conf`
 
 ## How to Use
 
@@ -93,10 +89,13 @@ Local Docker (recommended):
 docker compose run --rm zmk-build-release --list
 
 # build only Sofle and Eyelash Sofle split targets
-docker compose run --rm zmk-build-release --artifact-names sofle_left,sofle_right,sofle_reset,eyelash_sofle_left,eyelash_sofle_right,eyelash_sofle_reset
+docker compose run --rm zmk-build-release --artifact-names sofle_left,sofle_right,eyelash_sofle_left,eyelash_sofle_right
 
-# build Sofle and Eyelash Sofle dongle targets
-docker compose run --rm zmk-build-release --artifact-names sofle_left_w_dongle,sofle_zdd_dongle,sofle_zdd_dongle_reset,eyelash_sofle_left_w_dongle,eyelash_sofle_zdd_dongle,eyelash_sofle_zdd_dongle_reset
+# build dedicated dongle targets (ZDD + Prospector)
+docker compose run --rm zmk-build-release --artifact-names sofle_zdd_dongle,sofle_prospector_dongle,eyelash_sofle_zdd_dongle,eyelash_sofle_prospector_dongle
+
+# build split-with-dongle-topology targets
+docker compose run --rm zmk-build-release --artifact-names sofle_left_w_dongle,eyelash_sofle_left_w_dongle
 ```
 
 ### Flashing
@@ -105,7 +104,7 @@ docker compose run --rm zmk-build-release --artifact-names sofle_left_w_dongle,s
 2. Enter bootloader mode (usually by double-tapping reset).
 3. Drag and drop the matching left UF2 file.
 4. Repeat for the right half with the matching right UF2 file.
-5. Use reset UF2 when clearing settings and BLE bonds.
+5. Use shared reset artifacts (`reset_nice_nano_v2` or `reset_seeeduino_xiao_ble`) when clearing settings and BLE bonds.
 
 Artifact-to-device mapping:
 
@@ -113,16 +112,14 @@ Artifact-to-device mapping:
 | --- | --- |
 | `sofle_left.uf2` | Sofle left half |
 | `sofle_right.uf2` | Sofle right half |
-| `sofle_reset.uf2` | Sofle side when clearing settings/bonds |
 | `sofle_left_w_dongle.uf2` | Sofle left half for dongle topology |
-| `sofle_zdd_dongle.uf2` | Sofle dedicated dongle |
-| `sofle_zdd_dongle_reset.uf2` | Sofle dongle reset target |
+| `sofle_zdd_dongle.uf2` | Sofle dedicated ZDD dongle |
+| `sofle_prospector_dongle.uf2` | Sofle dedicated Prospector dongle |
 | `eyelash_sofle_left.uf2` | Eyelash Sofle left half |
 | `eyelash_sofle_right.uf2` | Eyelash Sofle right half |
-| `eyelash_sofle_reset.uf2` | Eyelash Sofle side when clearing settings/bonds |
 | `eyelash_sofle_left_w_dongle.uf2` | Eyelash Sofle left half for dongle topology |
-| `eyelash_sofle_zdd_dongle.uf2` | Eyelash Sofle dedicated dongle |
-| `eyelash_sofle_zdd_dongle_reset.uf2` | Eyelash Sofle dongle reset target |
+| `eyelash_sofle_zdd_dongle.uf2` | Eyelash Sofle dedicated ZDD dongle |
+| `eyelash_sofle_prospector_dongle.uf2` | Eyelash Sofle dedicated Prospector dongle |
 
 ## Configuration
 
@@ -132,7 +129,7 @@ Artifact-to-device mapping:
 
 ## Troubleshooting
 
-- If split halves fail to reconnect, flash reset UF2 and re-pair.
+- If split halves fail to reconnect, flash a shared reset artifact and re-pair.
 - If behavior differs between halves, reflash both halves from the same build batch.
 - If Studio does not connect on left builds, confirm `common-config studio-rpc-usb-uart` is still enabled for left targets in `build.yaml`.
 - For Eyelash Sofle, verify matrix/header include paths in `config/eyelash_sofle.keymap` before rebuilding.
@@ -141,4 +138,4 @@ Artifact-to-device mapping:
 
 - Sofle split targets are active in `build.yaml`.
 - Eyelash Sofle split targets are active in `build.yaml`.
-- Sofle and Eyelash Sofle dongle targets are active in `build.yaml`.
+- Sofle and Eyelash Sofle dedicated dongle targets are active in `build.yaml` for both `zdd` and `prospector` hardware.

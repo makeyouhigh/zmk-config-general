@@ -16,9 +16,9 @@ Rule of done for each firmware target:
 
 - [x] Freeze naming convention
   - [x] Single: `<keyboard>_<hardware>_<role>` : This allows to build with wildcard for single keyboard
-  - [x] central/scanner: `<hardware>_<role>`
+  - [x] scanner: `<hardware>_<role>`
 - [x] Freeze hardware IDs (`zdd`, `prospector`)
-- [x] Freeze role names (`dongle`, `central`, `scanner`)
+- [x] Freeze role names (`dongle`, `scanner`)
 
 ### ZMK Dongle Display(`zdd`)
 
@@ -31,34 +31,28 @@ Rule of done for each firmware target:
   - [x] delta omega
   - [x] corne
   - [x] eyelash corne variation
-- [x] drop central target
+- [x] drop legacy shared target
   - [x] removed shared target: `zdd_central`
 - [x] scanner track removed from `zdd`
   - [x] scanner role is Prospector-only scope
 
 ### Prospector hardware(`prospector`) + YADS firmware
 
-- [ ] implement device single
+- [x] implement device single
   - [x] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
-- [ ] develop central
-  - [ ] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
+  - [x] urchin
+  - [x] sofle
+  - [x] eyelash sofle
+  - [x] cornix
+  - [x] delta omega
+  - [x] corne
+  - [x] eyelash corne variation
 - [ ] develop scanner
   - [ ] totem
   - [ ] urchin
   - [ ] sofle
   - [ ] eyelash sofle
+  - [ ] eyelash corne variation
   - [ ] cornix
   - [ ] delta omega
   - [ ] corne
@@ -68,18 +62,20 @@ Rule of done for each firmware target:
 - [x] Totem: verify left/right/reset targets
 - [x] Urchin: verify left/right/reset targets
 - [x] Sofle: verify left/right/reset targets
+- [x] Eyelash Sofle: verify target status and doc status
 - [x] Corne: verify target status and doc status
+- [x] Eyelash Corne: verify target status and doc status
 - [x] Cornix: verify target status and doc status
 - [x] Delta Omega: verify target status and doc status
 
 - [x] Continuum integration: remove duplicated per-keyboard keymap logic
 - [x] Verify sleep/battery/BLE defaults per keyboard family
-- [ ] Verify split peripheral counts are correct for each central role target
+- [ ] Verify split peripheral counts are correct for each dongle target
 
 ## 3. Documentation
 
 - [x] Keep `README.md` and `README_KO.md` synchronized after each feature batch
-- [x] Keep dongle role wording consistent (`dongle`, `central`, `scanner`)
+- [x] Keep dongle role wording consistent (`dongle`, `scanner`)
 - [x] Update `docs/dongle.md` matrix and examples after each new target
 - [x] Run docs sanity pass against `docs/docs_rules.md` (used as baseline template, expanded where needed)
 - [x] Keep `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and docs rules aligned

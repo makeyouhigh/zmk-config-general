@@ -109,11 +109,11 @@ Some are planned-only depending on current matrix coverage.
 Current state from `build.yaml`:
 
 - Active dongle-related entries:
-  - Split and dongle targets for Totem, Urchin, Corne, Eyelash Corne, Sofle, Eyelash Sofle, Delta Omega, and Cornix.
+  - Split targets for Totem, Urchin, Corne, Eyelash Corne, Sofle, Eyelash Sofle, Delta Omega, and Cornix.
+  - Dedicated ZDD and Prospector dongle targets for Totem, Urchin, Corne, Eyelash Corne, Sofle, Eyelash Sofle, Delta Omega, and Cornix.
   - Shared reset targets: `reset_nice_nano_v2`, `reset_seeeduino_xiao_ble`.
 - Not active yet:
   - `prospector_scanner`
-  - Additional `<keyboard>_prospector_dongle` family targets
 
 ## `scanner` Role: Status Observer Model
 
