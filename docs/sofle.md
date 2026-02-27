@@ -8,23 +8,23 @@ This document describes the Sofle keyboard configuration in this repository and 
 
 Implemented matrix targets:
 
-| Target | Board | Shield | Snippet | Artifact Name | Status |
-| --- | --- | --- | --- | --- | --- |
-| Left half | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | `common-config studio-rpc-usb-uart` | `sofle_left` | Active |
-| Right half | `nice_nano_v2` | `sofle_right nice_view_adapter nice_view` | none | `sofle_right` | Active |
-| Left half (dongle split) | `nice_nano_v2` | `sofle_left nice_view_adapter nice_view` | none | `sofle_left_w_dongle` | Active |
-| Dongle (ZDD) | `nice_nano_v2` | `sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `sofle_zdd_dongle` | Active |
-| Dongle (Prospector) | `seeeduino_xiao_ble` | `sofle_dongle prospector_adapter` | `studio-rpc-usb-uart prospector_extension` | `sofle_prospector_dongle` | Active |
+| Target                   | Board                | Shield                                    | Snippet                                 | Artifact Name             | Status |
+| ------------------------ | -------------------- | ----------------------------------------- | --------------------------------------- | ------------------------- | ------ |
+| Left half                | `nice_nano_v2`       | `sofle_left nice_view_adapter nice_view`  | `common-config studio-rpc-usb-uart`     | `sofle_left`              | Active |
+| Right half               | `nice_nano_v2`       | `sofle_right nice_view_adapter nice_view` | none                                    | `sofle_right`             | Active |
+| Left half (dongle split) | `nice_nano_v2`       | `sofle_left nice_view_adapter nice_view`  | none                                    | `sofle_left_w_dongle`     | Active |
+| Dongle (ZDD)             | `nice_nano_v2`       | `sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart`                   | `sofle_zdd_dongle`        | Active |
+| Dongle (Prospector)      | `seeeduino_xiao_ble` | `sofle_dongle prospector_adapter`         | `studio-rpc-usb-uart prospector-config` | `sofle_prospector_dongle` | Active |
 
 Related implemented targets for Eyelash Sofle:
 
-| Target | Board | Shield | Snippet | Artifact Name | Status |
-| --- | --- | --- | --- | --- | --- |
-| Left half | `eyelash_sofle_left` | `nice_view` | `common-config studio-rpc-usb-uart` | `eyelash_sofle_left` | Active |
-| Right half | `eyelash_sofle_right` | `nice_view` | none | `eyelash_sofle_right` | Active |
-| Left half (dongle split) | `eyelash_sofle_left` | `nice_view` | none | `eyelash_sofle_left_w_dongle` | Active |
-| Dongle (ZDD) | `nice_nano_v2` | `eyelash_sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart` | `eyelash_sofle_zdd_dongle` | Active |
-| Dongle (Prospector) | `seeeduino_xiao_ble` | `eyelash_sofle_dongle prospector_adapter` | `studio-rpc-usb-uart prospector_extension` | `eyelash_sofle_prospector_dongle` | Active |
+| Target                   | Board                 | Shield                                            | Snippet                                 | Artifact Name                     | Status |
+| ------------------------ | --------------------- | ------------------------------------------------- | --------------------------------------- | --------------------------------- | ------ |
+| Left half                | `eyelash_sofle_left`  | `nice_view`                                       | `common-config studio-rpc-usb-uart`     | `eyelash_sofle_left`              | Active |
+| Right half               | `eyelash_sofle_right` | `nice_view`                                       | none                                    | `eyelash_sofle_right`             | Active |
+| Left half (dongle split) | `eyelash_sofle_left`  | `nice_view`                                       | none                                    | `eyelash_sofle_left_w_dongle`     | Active |
+| Dongle (ZDD)             | `nice_nano_v2`        | `eyelash_sofle_dongle zdd_adapter dongle_display` | `studio-rpc-usb-uart`                   | `eyelash_sofle_zdd_dongle`        | Active |
+| Dongle (Prospector)      | `seeeduino_xiao_ble`  | `eyelash_sofle_dongle prospector_adapter`         | `studio-rpc-usb-uart prospector-config` | `eyelash_sofle_prospector_dongle` | Active |
 
 Shared reset artifacts remain available at repo level: `reset_nice_nano_v2`, `reset_seeeduino_xiao_ble`.
 
@@ -108,18 +108,18 @@ docker compose run --rm zmk-build-release --artifact-names sofle_left_w_dongle,e
 
 Artifact-to-device mapping:
 
-| Artifact | Flash To |
-| --- | --- |
-| `sofle_left.uf2` | Sofle left half |
-| `sofle_right.uf2` | Sofle right half |
-| `sofle_left_w_dongle.uf2` | Sofle left half for dongle topology |
-| `sofle_zdd_dongle.uf2` | Sofle dedicated ZDD dongle |
-| `sofle_prospector_dongle.uf2` | Sofle dedicated Prospector dongle |
-| `eyelash_sofle_left.uf2` | Eyelash Sofle left half |
-| `eyelash_sofle_right.uf2` | Eyelash Sofle right half |
-| `eyelash_sofle_left_w_dongle.uf2` | Eyelash Sofle left half for dongle topology |
-| `eyelash_sofle_zdd_dongle.uf2` | Eyelash Sofle dedicated ZDD dongle |
-| `eyelash_sofle_prospector_dongle.uf2` | Eyelash Sofle dedicated Prospector dongle |
+| Artifact                              | Flash To                                    |
+| ------------------------------------- | ------------------------------------------- |
+| `sofle_left.uf2`                      | Sofle left half                             |
+| `sofle_right.uf2`                     | Sofle right half                            |
+| `sofle_left_w_dongle.uf2`             | Sofle left half for dongle topology         |
+| `sofle_zdd_dongle.uf2`                | Sofle dedicated ZDD dongle                  |
+| `sofle_prospector_dongle.uf2`         | Sofle dedicated Prospector dongle           |
+| `eyelash_sofle_left.uf2`              | Eyelash Sofle left half                     |
+| `eyelash_sofle_right.uf2`             | Eyelash Sofle right half                    |
+| `eyelash_sofle_left_w_dongle.uf2`     | Eyelash Sofle left half for dongle topology |
+| `eyelash_sofle_zdd_dongle.uf2`        | Eyelash Sofle dedicated ZDD dongle          |
+| `eyelash_sofle_prospector_dongle.uf2` | Eyelash Sofle dedicated Prospector dongle   |
 
 ## Configuration
 

@@ -1,0 +1,12 @@
+/ {
+    chosen {
+        zephyr,console = &snippet_prospector_config;
+        zephyr,shell-uart = &snippet_prospector_config;
+    };
+};
+
+&zephyr_udc0 {
+    snippet_prospector_config: snippet_prospector_config {
+        compatible = "zephyr,cdc-acm-uart";
+    };
+};

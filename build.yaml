@@ -41,7 +41,7 @@ include:
     artifact-name: totem_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: totem_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"TOTEM\ PRSP\"
     artifact-name: totem_prospector_dongle
 
@@ -67,7 +67,7 @@ include:
     artifact-name: urchin_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: urchin_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Urchin\ PRSP\"
     artifact-name: urchin_prospector_dongle
 
@@ -94,7 +94,7 @@ include:
     artifact-name: corne_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: corne_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Corne\ PRSP\"
     artifact-name: corne_prospector_dongle
 
@@ -117,8 +117,8 @@ include:
     artifact-name: eyelash_corne_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: eyelash_corne_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"EyelashCornePRSP\"
+    snippet: studio-rpc-usb-uart prospector-config
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"ELCornePRSP\"
     artifact-name: eyelash_corne_prospector_dongle
 
   # Sofle
@@ -140,7 +140,7 @@ include:
     artifact-name: sofle_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: sofle_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Sofle\ PRSP\"
     artifact-name: sofle_prospector_dongle
 
@@ -163,8 +163,8 @@ include:
     artifact-name: eyelash_sofle_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: eyelash_sofle_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"EyelashSoflePRSP\"
+    snippet: studio-rpc-usb-uart prospector-config
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"ELSoflePRSP\"
     artifact-name: eyelash_sofle_prospector_dongle
 
   # Delta Omega
@@ -189,7 +189,7 @@ include:
     artifact-name: delta_omega_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: delta_omega_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"DeltaOmegaPRSP\"
     artifact-name: delta_omega_prospector_dongle
 
@@ -215,7 +215,7 @@ include:
     artifact-name: cornix_zdd_dongle
   - board: seeeduino_xiao_ble
     shield: cornix_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Cornix\ PRSP\"
     artifact-name: cornix_prospector_dongle
 
@@ -226,3 +226,8 @@ include:
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: reset_seeeduino_xiao_ble
+  - board: seeeduino_xiao_ble
+    shield: prospector_scanner
+    snippet: studio-rpc-usb-uart scanner-config
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"TOTEM\ PRSP\"
+    artifact-name: prospector_scanner

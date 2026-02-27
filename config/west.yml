@@ -59,10 +59,11 @@ manifest:
     # - name: prospector-zmk-module
     #   remote: carrefinho
     #   revision: feat/new-status-screens
-    # - name: prospector-zmk-module
+    # - name: prospector-scanner
     #   remote: togura
+    #   repo-path: prospector-zmk-module
     #   revision: v2.0.0
-    #   path: modules/prospector-zmk-module
+    #   path: modules/prospector-scanner
     # - name: prospector-scanner
     #   remote: togura
     #   repo-path: prospector-zmk-module

@@ -138,7 +138,7 @@ include:
 
   - board: seeeduino_xiao_ble
     shield: corne_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
+    snippet: studio-rpc-usb-uart prospector-config
     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Corne\ PRSP\"
     artifact-name: corne_prospector_dongle
 
@@ -164,8 +164,8 @@ include:
 
   - board: seeeduino_xiao_ble
     shield: eyelash_corne_dongle prospector_adapter
-    snippet: studio-rpc-usb-uart prospector_extension
-    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"EyelashCornePRSP\"
+    snippet: studio-rpc-usb-uart prospector-config
+    cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"ELCornePRSP\"
     artifact-name: eyelash_corne_prospector_dongle
 ```
 
