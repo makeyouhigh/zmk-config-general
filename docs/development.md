@@ -2,6 +2,10 @@
 
 This document describes day-to-day development and local build flow for this repository.
 
+Related references:
+
+- Known non-blocking warning tracker: `docs/known_issues.md`
+
 ## CI Workflows
 
 Build and release are matrix-driven via `build.yaml`.

@@ -1,5 +1,3 @@
-#include "eyelash_corne.dtsi"
-
 /{
     chosen {
         zmk,kscan = &mock_kscan;

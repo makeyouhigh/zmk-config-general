@@ -5,8 +5,6 @@
 *
 */
 
-#include "eyelash_sofle.dtsi"
-
 /{
     chosen {
         zmk,kscan = &mock_kscan;
