@@ -47,15 +47,15 @@ Rule of done for each firmware target:
   - [x] delta omega
   - [x] corne
   - [x] eyelash corne variation
-- [ ] develop scanner
-  - [ ] totem
-  - [ ] urchin
-  - [ ] sofle
-  - [ ] eyelash sofle
-  - [ ] eyelash corne variation
-  - [ ] cornix
-  - [ ] delta omega
-  - [ ] corne
+- [x] develop scanner
+  - [x] totem
+  - [x] urchin
+  - [x] sofle
+  - [x] eyelash sofle
+  - [x] eyelash corne variation
+  - [x] cornix
+  - [x] delta omega
+  - [x] corne
 
 ## 2. Keyboard / Devices
 
@@ -70,7 +70,7 @@ Rule of done for each firmware target:
 
 - [x] Continuum integration: remove duplicated per-keyboard keymap logic
 - [x] Verify sleep/battery/BLE defaults per keyboard family
-- [ ] Verify split peripheral counts are correct for each dongle target
+- [x] Verify split peripheral counts are correct for each dongle target
 
 ## 3. Documentation
 

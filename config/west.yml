@@ -66,7 +66,7 @@ manifest:
 
     # ## Prospector Scanner
     # - name: prospector-zmk-module
-    #   remote: prospector
+    #   remote: togura
     #   revision: v2.0.0
     #   path: modules/prospector-zmk-module
     # # - name: prospector-scanner
