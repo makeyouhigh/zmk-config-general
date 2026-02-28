@@ -60,6 +60,13 @@ jobs:
             svg_out="draw-artifacts/${keyboard}.svg"
             layout_json=""
 
+            # Scanner config keymaps do not represent a physical keyboard layout.
+            # Skip drawing for non-keyboard artifacts to avoid keymap-drawer validation errors.
+            if [ "${keyboard}" = "prospector_scanner" ]; then
+              echo "Skipping non-keyboard keymap: ${keyboard}"
+              continue
+            fi
+
             if [ -f "config/${keyboard}.json" ]; then
               layout_json="config/${keyboard}.json"
             elif [ -f "boards/shields/${keyboard}/${keyboard}.json" ]; then
